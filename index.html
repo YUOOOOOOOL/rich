@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffe98a">
+<title>우리집 황금곳간</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold:#f5b800; --gold2:#ffc93c; --gold3:#ffe066; --gold-lt:#fff3b8;
+  --pink:#ff8fb1; --mint:#3fcfaa; --sky:#6cb8ff; --lav:#b49cff; --peach:#ffa96b;
+  --cream:#fffdf3; --paper:rgba(255,255,250,.86);
+  --ink:#5a3d12; --ink2:#a07a2c; --line:rgba(245,184,0,.25);
+  --good:#16a37f; --bad:#ff5a7a; --red:#e8283f;
+  --cute:'Jua','Gowun Dodum',sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{font-family:'Gowun Dodum',system-ui,sans-serif;color:var(--ink);background:#fff8d6;min-height:100vh;overflow-x:hidden}
+button,input,select{font-family:inherit;color:inherit}
+.serif,.big,b,strong,.btn,.chip.on{font-family:var(--cute);font-weight:400}
+
+/* ===== 밝은 황금빛 배경 ===== */
+.bg{position:fixed;inset:0;z-index:-3;background:
+  radial-gradient(90% 55% at 50% -5%,#ffffff 0%,rgba(255,253,235,.95) 30%,transparent 70%),
+  radial-gradient(60% 40% at 0% 100%,rgba(255,170,200,.35),transparent 70%),
+  radial-gradient(60% 40% at 100% 85%,rgba(150,220,255,.30),transparent 70%),
+  radial-gradient(120% 90% at 50% 0%,#fffbe0 0%,#fff1a8 40%,#ffe373 75%,#ffd74a 100%)}
+.rays{position:fixed;left:50%;top:-75vmax;width:170vmax;height:170vmax;margin-left:-85vmax;z-index:-2;pointer-events:none;
+  background:repeating-conic-gradient(from 0deg,rgba(255,255,255,.65) 0deg 4deg,rgba(255,255,255,0) 4deg 15deg);
+  -webkit-mask-image:radial-gradient(circle,#000 0%,rgba(0,0,0,.6) 25%,transparent 58%);
+  mask-image:radial-gradient(circle,#000 0%,rgba(0,0,0,.6) 25%,transparent 58%);
+  animation:spin 160s linear infinite;opacity:.8}
+.glow{position:fixed;left:50%;top:-140px;width:520px;height:320px;margin-left:-260px;z-index:-1;pointer-events:none;
+  background:radial-gradient(ellipse at center,rgba(255,255,255,1) 0%,rgba(255,250,215,.6) 40%,transparent 70%);filter:blur(10px);animation:breathe 6s ease-in-out infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes breathe{50%{opacity:.6;transform:scale(1.08)}}
+#fx{position:fixed;inset:0;pointer-events:none;z-index:1}
+
+/* ===== 레이아웃 ===== */
+#app{position:relative;z-index:2;max-width:640px;margin:0 auto;padding:18px 16px 110px;display:none}
+#app.on{display:block}
+header.top{display:flex;align-items:center;justify-content:space-between;margin:4px 2px 16px}
+.brand{font-family:var(--cute);font-size:27px;letter-spacing:-.3px;
+  background:linear-gradient(100deg,#ff8a3d 0%,#f5b800 25%,#fff7c2 45%,#ff8fb1 62%,#f5b800 100%);background-size:250% 100%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 5s linear infinite;filter:drop-shadow(0 1px 0 rgba(255,255,255,.9))}
+.brand::after{content:" ✨";-webkit-text-fill-color:initial}
+@keyframes shine{to{background-position:-250% 0}}
+.sub{font-size:12.5px;color:var(--ink2);margin-top:2px}
+.iconbtn{border:none;background:#fff;width:42px;height:42px;border-radius:50%;font-size:18px;cursor:pointer;box-shadow:0 3px 10px rgba(245,184,0,.3)}
+
+.card{position:relative;overflow:hidden;background:var(--paper);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border:2px solid rgba(255,255,255,.95);border-radius:26px;box-shadow:0 8px 24px rgba(240,170,0,.18),inset 0 1px 0 #fff;padding:18px;margin-bottom:14px}
+.card.shimmer::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;pointer-events:none;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.7),transparent);transform:skewX(-20deg);animation:sweep 6s ease-in-out infinite}
+@keyframes sweep{0%,60%{left:-60%}100%{left:130%}}
+.card h3{margin:0 0 12px;font-family:var(--cute);font-weight:400;font-size:19px;display:flex;align-items:center;gap:6px}
+.card h3 small{font-family:'Gowun Dodum';font-size:12px;color:var(--ink2);margin-left:auto}
+/* 카드마다 다른 색 리본 */
+.view>.card::before{content:"";position:absolute;left:0;top:0;right:0;height:5px;background:linear-gradient(90deg,var(--gold2),var(--peach))}
+.view>.card:nth-of-type(4n+2)::before{background:linear-gradient(90deg,var(--pink),#ffc1d6)}
+.view>.card:nth-of-type(4n+3)::before{background:linear-gradient(90deg,var(--mint),#a8f0dc)}
+.view>.card:nth-of-type(4n)::before{background:linear-gradient(90deg,var(--sky),var(--lav))}
+.muted{color:var(--ink2);font-size:12.5px}
+.big{font-size:28px;letter-spacing:-.3px}
+.good{color:var(--good)} .bad{color:var(--bad)}
+.row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;font-size:14px}
+.row+.row{border-top:1.5px dashed var(--line)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mini{background:#fff;border-radius:18px;padding:12px;border:none}
+.grid2>.mini:nth-child(1){background:linear-gradient(135deg,#fff3c4,#ffe28a)}
+.grid2>.mini:nth-child(2){background:linear-gradient(135deg,#ffe4ee,#ffc6da)}
+.grid2>.mini:nth-child(3){background:linear-gradient(135deg,#e2f8f1,#b9eedd)}
+.grid2>.mini:nth-child(4){background:linear-gradient(135deg,#e6f1ff,#d8d0ff)}
+.mini .l{font-size:12px;color:#8a6a2a} .mini .v{font-family:var(--cute);font-size:19px;margin-top:3px}
+
+/* 목표 링 */
+.hero{display:flex;gap:16px;align-items:center}
+.ring{position:relative;width:132px;height:132px;flex:none}
+.ring svg{transform:rotate(-90deg)}
+.ring .c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.ring .c b{font-size:26px}
+.ring .c span{font-size:11px;color:var(--ink2)}
+
+/* 진행 막대 */
+.bar{position:relative;height:16px;border-radius:99px;background:rgba(255,201,60,.2);overflow:visible;margin:10px 0 6px}
+.bar>i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#ffe066,#ffc93c 45%,#ffa96b 80%,#ff8fb1);box-shadow:0 0 12px rgba(255,201,60,.6);transition:width .6s}
+.bar>i.over{background:linear-gradient(90deg,#ffa96b,#ff5a7a)}
+.bar .mark{position:absolute;top:-5px;width:3px;height:26px;background:#6cb8ff;border-radius:3px}
+.bar .mark::after{content:attr(data-l);position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:10.5px;white-space:nowrap;color:#3a8ee0;font-family:var(--cute)}
+
+.flow .row span:first-child{color:var(--ink2)}
+.flow .total{margin-top:6px;padding:12px 14px;border-radius:16px;background:linear-gradient(135deg,#fff6c9,#ffe08a);display:flex;justify-content:space-between;font-family:var(--cute);font-size:16px}
+.daily{text-align:center;margin-top:14px;padding:16px;border-radius:20px;background:linear-gradient(135deg,#fffbe8,#ffeef5 60%,#eaf6ff);border:2px dashed #ffc6da}
+.daily .big{font-size:32px;color:#ff7a3d}
+
+.coach{display:flex;gap:10px;padding:12px;border-radius:18px;background:#eef6ff;margin-bottom:8px;font-size:13.5px;line-height:1.6}
+.coach.warn{background:#ffeef3}
+.coach.warn b{color:#e84a72}
+.coach.ok{background:#e7f8f2}
+.coach.ok b{color:var(--good)}
+.coach .ic{font-size:22px;line-height:1.2;width:38px;height:38px;flex:none;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center}
+.coach b{display:block;font-size:15px;margin-bottom:2px}
+
+/* 버튼/폼 */
+.btn{border:none;border-radius:99px;padding:13px 18px;font-size:16px;cursor:pointer;
+  background:linear-gradient(135deg,#ffe066,#ffc93c 50%,#ffa96b);color:#5a3000;box-shadow:0 4px 0 #e8a020,0 6px 16px rgba(255,170,0,.35)}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #e8a020}
+.btn.ghost{background:#fff;box-shadow:0 3px 0 #ffd7e4;border:2px solid #ffd7e4;color:#e8628a}
+.btn.sm{padding:8px 14px;font-size:14px}
+.btn.full{width:100%}
+.btn.danger{background:#fff;color:var(--bad);border:2px solid #ffc6d3;box-shadow:none}
+label.f{display:block;font-size:13px;color:var(--ink2);margin:12px 0 6px}
+input.in,select.in{width:100%;padding:12px 14px;border-radius:16px;border:2px solid #fff0b8;background:#fff;font-size:15px;outline:none}
+input.in:focus,select.in:focus{border-color:var(--pink);box-shadow:0 0 0 4px rgba(255,143,177,.2)}
+.amount{font-family:var(--cute);font-size:28px!important;text-align:right;color:#ff7a3d}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{border:2px solid #fff0b8;background:#fff;padding:7px 12px;border-radius:99px;font-size:13.5px;cursor:pointer}
+.chip.on{background:linear-gradient(135deg,#ffe066,#ffc93c);border-color:transparent;box-shadow:0 3px 0 #e8a020}
+.seg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.seg .chip{text-align:center;padding:10px 4px;font-family:var(--cute);font-size:15px}
+.seg .chip:nth-child(1).on{background:linear-gradient(135deg,#8ee8cf,#3fcfaa);box-shadow:0 3px 0 #22a585;color:#fff}
+.seg .chip:nth-child(2).on{background:linear-gradient(135deg,#d6c8ff,#b49cff);box-shadow:0 3px 0 #8f72e8;color:#fff}
+.seg .chip:nth-child(3).on{background:linear-gradient(135deg,#ffc1d6,#ff8fb1);box-shadow:0 3px 0 #e8628a;color:#fff}
+.seg .chip:nth-child(4).on{background:linear-gradient(135deg,#ffe066,#ffb800);box-shadow:0 3px 0 #e09a00}
+.quick{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.quick .chip{padding:6px 10px;font-size:12.5px;background:#fffbe8}
+
+/* 목록 */
+.tx{display:flex;align-items:center;gap:10px;padding:10px 2px;border-top:1.5px dashed var(--line)}
+.tx:first-child{border-top:none}
+.tx .dot{width:38px;height:38px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:18px;flex:none;background:#fff6d1}
+.tx .dot.d-수입{background:#dcf7ef} .tx .dot.d-고정지출{background:#ece6ff} .tx .dot.d-변동지출{background:#ffe6ee} .tx .dot.d-저축{background:#fff0b8}
+.tx .mid{flex:1;min-width:0}
+.tx .mid b{font-size:15px;display:block}
+.tx .mid b span{font-family:'Gowun Dodum'}
+.tx .mid span{font-size:12px;color:var(--ink2);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tx .amt{font-family:var(--cute);font-size:16px;white-space:nowrap}
+.tx .del{border:none;background:none;color:#d8bfa0;font-size:16px;cursor:pointer;padding:4px}
+.t-수입{color:var(--good)} .t-저축{color:#e09a00} .t-고정지출{color:#8f72e8} .t-변동지출{color:#e8628a}
+
+/* 월 이동 */
+.mnav{display:flex;align-items:center;justify-content:center;gap:16px;margin:0 0 14px}
+.mnav b{font-family:var(--cute);font-size:22px;min-width:130px;text-align:center}
+.mnav button{border:none;background:#fff;width:38px;height:38px;border-radius:50%;font-size:16px;cursor:pointer;color:#e8628a;box-shadow:0 3px 0 #ffd7e4}
+
+/* 도넛 / 막대 */
+.donutwrap{display:flex;gap:16px;align-items:center}
+.donut{width:130px;height:130px;border-radius:50%;flex:none;position:relative}
+.donut::after{content:"💛";position:absolute;inset:26px;border-radius:50%;background:#fffdf3;display:flex;align-items:center;justify-content:center;font-size:24px}
+.legend{flex:1;font-size:12.5px}
+.legend div{display:flex;align-items:center;gap:6px;padding:3px 0}
+.legend i{width:11px;height:11px;border-radius:50%;flex:none}
+.legend span{margin-left:auto;font-family:var(--cute);font-size:13.5px}
+.stack{display:flex;height:24px;border-radius:99px;overflow:hidden;margin:8px 0;border:2px solid #fff}
+.stack>div{height:100%}
+.cmp{padding:9px 0;border-top:1.5px dashed var(--line)}
+.cmp:first-child{border-top:none}
+.cmp .h{display:flex;justify-content:space-between;font-size:14px}
+.cmp .bars{display:grid;grid-template-columns:34px 1fr;gap:3px 6px;align-items:center;margin-top:6px;font-size:11px;color:var(--ink2)}
+.cmp .b{height:9px;border-radius:99px}
+.trend{display:flex;align-items:flex-end;gap:8px;height:150px;padding-top:10px}
+.trend .col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end}
+.trend .pair{display:flex;align-items:flex-end;gap:3px;height:100%;width:100%;justify-content:center}
+.trend .pair div{width:40%;border-radius:8px 8px 3px 3px;min-height:2px}
+.trend small{font-size:12px;color:var(--ink2);font-family:var(--cute)}
+table.yr{width:100%;border-collapse:collapse;font-size:12.5px}
+table.yr th,table.yr td{padding:7px 4px;text-align:right;border-bottom:1.5px dashed var(--line)}
+table.yr th:first-child,table.yr td:first-child{text-align:left}
+table.yr th{color:var(--ink2);font-weight:400}
+table.yr tr.now td{background:#fff3c4}
+.save-tip{padding:12px;border-radius:18px;background:#fff;margin-bottom:8px;border:2px solid #ffe6ee}
+.save-tip:nth-child(2){border-color:#dcf7ef} .save-tip:nth-child(3){border-color:#e6f1ff}
+.save-tip .t{display:flex;justify-content:space-between;font-family:var(--cute);font-size:15.5px}
+.save-tip p{margin:6px 0 0;font-size:13px;line-height:1.6;color:#6b4e1a}
+.rank{display:inline-flex;width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#ffc1d6,#ff8fb1);color:#fff;align-items:center;justify-content:center;font-size:13px;margin-right:6px}
+
+/* 하단 탭 */
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;display:none;justify-content:center;padding:8px 10px calc(8px + env(safe-area-inset-bottom));
+  background:rgba(255,253,240,.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:2px solid #fff0b8;border-radius:22px 22px 0 0}
+nav.tabs.on{display:flex}
+nav.tabs .in{display:flex;max-width:640px;width:100%;justify-content:space-around}
+nav.tabs button{border:none;background:none;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:12px;color:var(--ink2);cursor:pointer;padding:5px 12px;border-radius:16px;font-family:var(--cute)}
+nav.tabs button .e{font-size:21px;filter:grayscale(.5);opacity:.7;transition:.2s}
+nav.tabs button.on .e{filter:none;opacity:1;transform:translateY(-2px) scale(1.12)}
+nav.tabs button:nth-child(1).on{background:#fff0b8;color:#b07800}
+nav.tabs button:nth-child(2).on{background:#ffe4ee;color:#e8628a}
+nav.tabs button:nth-child(3).on{background:#dcf7ef;color:#16a37f}
+nav.tabs button:nth-child(4).on{background:#e3efff;color:#3a8ee0}
+nav.tabs button:nth-child(5).on{background:#ece6ff;color:#7d5fe0}
+.fab{position:fixed;right:max(18px,calc(50% - 300px));bottom:92px;z-index:21;width:60px;height:60px;border-radius:50%;border:none;font-size:30px;cursor:pointer;display:none;
+  background:radial-gradient(circle at 35% 30%,#fff,#ffc1d6 40%,#ff8fb1);color:#fff;box-shadow:0 5px 0 #e8628a,0 10px 22px rgba(232,98,138,.4);font-family:var(--cute)}
+.fab.on{display:block}
+.view{display:none;animation:fadeup .35s ease}
+.view.on{display:block}
+@keyframes fadeup{from{opacity:0;transform:translateY(8px)}}
+.banner{font-size:12.5px;padding:10px 12px;border-radius:16px;background:#eef6ff;border:2px dashed #b9dbff;margin-bottom:12px;line-height:1.5}
+.empty{text-align:center;padding:22px 8px;color:var(--ink2);font-size:13.5px;line-height:1.7}
+
+/* 토스트/로딩 */
+#toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%) translateY(20px);opacity:0;z-index:100;padding:11px 20px;border-radius:99px;
+  background:linear-gradient(135deg,#ff8fb1,#ffa96b);color:#fff;font-size:15px;font-family:var(--cute);transition:.3s;pointer-events:none;white-space:nowrap;box-shadow:0 6px 18px rgba(232,98,138,.35)}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+#busy{position:fixed;inset:0;z-index:90;display:none;align-items:center;justify-content:center;background:rgba(255,248,225,.35);backdrop-filter:blur(2px)}
+#busy.on{display:flex}
+#busy div{padding:14px 20px;border-radius:20px;background:#fff;box-shadow:0 8px 24px rgba(0,0,0,.1);font-size:15px;font-family:var(--cute)}
+#busy div::before{content:"✨";display:inline-block;margin-right:8px;animation:spin 1.2s linear infinite}
+
+/* ===== 잠금 화면 (빨강 → 밝은 노랑) ===== */
+#lock{position:fixed;inset:0;z-index:60;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;color:#fff;overflow:hidden;
+  background:linear-gradient(180deg,#e8283f 0%,#f5414a 16%,#ff6a45 36%,#ff9a3c 56%,#ffc93c 76%,#ffe873 92%,#fff6b0 100%)}
+#lock.off{display:none}
+#lock::before{content:"";position:absolute;left:-20%;right:-20%;top:0;height:85%;pointer-events:none;
+  background:conic-gradient(from 152deg at 50% -8%,transparent 0deg,rgba(255,240,200,.28) 6deg,transparent 12deg,rgba(255,255,230,.18) 19deg,transparent 25deg,
+    rgba(255,240,200,.30) 31deg,transparent 38deg,rgba(255,255,230,.16) 45deg,transparent 51deg,rgba(255,240,200,.24) 56deg,transparent 62deg);
+  -webkit-mask-image:linear-gradient(#000 20%,transparent 100%);mask-image:linear-gradient(#000 20%,transparent 100%);animation:beams 7s ease-in-out infinite}
+@keyframes beams{50%{opacity:.55;transform:translateX(12px)}}
+.aurora{position:absolute;inset:-20%;pointer-events:none;filter:blur(24px);animation:drift 20s ease-in-out infinite alternate;
+  background:radial-gradient(35% 25% at 20% 28%,rgba(255,170,210,.38),transparent 70%),
+             radial-gradient(30% 22% at 80% 20%,rgba(255,235,150,.35),transparent 70%),
+             radial-gradient(45% 28% at 50% 95%,rgba(255,255,255,.45),transparent 70%)}
+@keyframes drift{to{transform:translate(4%,-3%) scale(1.06)}}
+.lockbox{position:relative;z-index:2;width:100%;max-width:340px;text-align:center}
+
+.emblem{position:relative;width:150px;height:160px;margin:0 auto 4px}
+.halo{position:absolute;inset:-40px;border-radius:50%;background:radial-gradient(circle,rgba(255,250,215,.75) 0%,rgba(255,220,140,.3) 35%,transparent 66%);animation:breathe 4s ease-in-out infinite}
+.flare{position:absolute;left:50%;top:50%;width:0;height:0;animation:flare 3.2s ease-in-out infinite}
+.flare::before,.flare::after{content:"";position:absolute;left:-150px;top:-1px;width:300px;height:2px;border-radius:2px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,240,.95),transparent)}
+.flare::after{transform:rotate(90deg) scaleX(.6)}
+@keyframes flare{50%{transform:scale(.75) rotate(8deg);opacity:.6}}
+.orbit{position:absolute;inset:-8px;animation:spin 14s linear infinite;filter:drop-shadow(0 0 6px #fff3b0)}
+.orbit i{position:absolute;width:12px;height:12px;background:#fffbe0;
+  clip-path:polygon(50% 0,60% 40%,100% 50%,60% 60%,50% 100%,40% 60%,0 50%,40% 40%);animation:tw 1.8s ease-in-out infinite}
+.orbit i:nth-child(1){left:50%;top:-4px}
+.orbit i:nth-child(2){right:-2px;top:62%;width:9px;height:9px;animation-delay:-.6s;background:#ffd1e1}
+.orbit i:nth-child(3){left:2px;top:70%;width:15px;height:15px;animation-delay:-1.2s}
+@keyframes tw{50%{transform:scale(.35);opacity:.4}}
+.pouch{position:relative;width:132px;margin:8px auto 0;display:block;filter:drop-shadow(0 0 16px rgba(255,236,170,.85)) drop-shadow(0 10px 16px rgba(160,20,40,.35));animation:float 4.5s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-7px) rotate(-2deg)}}
+
+.locktitle{font-family:var(--cute);font-size:29px;margin:10px 0 4px;color:#fff;
+  text-shadow:0 2px 0 #e8283f,0 0 18px rgba(255,240,180,.9)}
+.lockmsg{font-size:14px;color:#fff;min-height:20px;margin-bottom:18px;line-height:1.5;text-shadow:0 1px 4px rgba(200,40,40,.45)}
+.lockmsg.err{font-family:var(--cute);font-size:15px}
+.pins{display:flex;justify-content:center;gap:14px;margin-bottom:22px;min-height:18px}
+.pins i{width:15px;height:15px;border-radius:50%;border:2px solid #fff;background:rgba(255,255,255,.25);transition:.2s}
+.pins i.on{background:radial-gradient(circle,#fff 0%,#fff3b0 55%,#ffd23c 100%);box-shadow:0 0 12px #fff,0 0 24px rgba(255,214,110,.9);transform:scale(1.15)}
+.shake{animation:shake .4s}
+@keyframes shake{20%,60%{transform:translateX(-9px)}40%,80%{transform:translateX(9px)}}
+.keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:290px;margin:0 auto}
+.keypad button{position:relative;overflow:hidden;height:62px;width:62px;border-radius:50%;justify-self:center;
+  border:2px solid rgba(255,255,255,.85);background:radial-gradient(circle at 35% 25%,rgba(255,255,255,.7),rgba(255,255,255,.3) 65%);
+  backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);color:#e8283f;font-size:26px;font-family:var(--cute);cursor:pointer;transition:.15s;
+  box-shadow:0 4px 0 rgba(232,60,60,.25),0 6px 14px rgba(200,60,0,.18)}
+.keypad button::after{content:"";position:absolute;top:0;left:-80%;width:50%;height:100%;transform:skewX(-20deg);
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.75),transparent);animation:glint 5s ease-in-out infinite}
+.keypad button:nth-child(3n+2)::after{animation-delay:.4s} .keypad button:nth-child(3n)::after{animation-delay:.8s}
+@keyframes glint{0%,70%{left:-80%}100%{left:140%}}
+.keypad button:active{transform:translateY(3px) scale(.95);box-shadow:0 0 22px rgba(255,255,255,.9)}
+.keypad button.txt{font-size:15px;border-color:transparent;background:none;box-shadow:none;backdrop-filter:none;color:#d2343f}
+.keypad button.txt::after{display:none}
+.keypad button.ok{background:radial-gradient(circle at 35% 25%,#fff,#ffb3c9 50%,#ff6f96);color:#fff;font-size:17px;border-color:#fff;text-shadow:0 1px 2px #d63a64;
+  box-shadow:0 4px 0 #e04d76;animation:okglow 2.4s ease-in-out infinite}
+@keyframes okglow{50%{box-shadow:0 4px 0 #e04d76,0 0 0 5px rgba(255,255,255,.45),0 0 26px rgba(255,150,190,.9)}}
+.lockfoot{margin-top:20px;font-size:14px;color:#e05a1a;font-family:var(--cute)}
+@media (prefers-reduced-motion:reduce){.rays,.glow,#lock::before,.aurora,.halo,.flare,.orbit,.orbit i,.pouch,.keypad button::after,.keypad button.ok,.brand,.card.shimmer::after{animation:none}}
+</style>
+</head>
+<body>
+<div class="bg"></div><div class="rays"></div><div class="glow"></div>
+<canvas id="fx"></canvas>
+
+<!-- ============ 잠금 화면 ============ -->
+<section id="lock">
+  <div class="aurora"></div>
+  <div class="lockbox" id="lockbox">
+    <div class="emblem" aria-hidden="true">
+      <div class="halo"></div>
+      <div class="flare"></div>
+      <div class="orbit"><i></i><i></i><i></i></div>
+      <svg class="pouch" viewBox="0 0 120 140">
+        <defs>
+          <linearGradient id="silk" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff8e2"/><stop offset=".35" stop-color="#f8dc8a"/><stop offset=".72" stop-color="#e6ad34"/><stop offset="1" stop-color="#b98012"/></linearGradient>
+          <radialGradient id="sheen" cx=".34" cy=".3" r=".55"><stop offset="0" stop-color="#fff" stop-opacity=".85"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+          <linearGradient id="cord" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ff7a92"/><stop offset=".5" stop-color="#d81b47"/><stop offset="1" stop-color="#9c0c33"/></linearGradient>
+        </defs>
+        <path d="M40 46 Q41 25 50 31 Q54 16 60 25 Q66 16 70 31 Q79 25 80 46 Z" fill="url(#silk)" stroke="#b98012" stroke-width=".8"/>
+        <path d="M42 47 Q15 60 15 90 Q15 127 60 129 Q105 127 105 90 Q105 60 78 47 Q60 53 42 47 Z" fill="url(#silk)" stroke="#c48b16" stroke-width="1"/>
+        <path d="M42 47 Q15 60 15 90 Q15 127 60 129 Q105 127 105 90 Q105 60 78 47 Q60 53 42 47 Z" fill="url(#sheen)"/>
+        <path d="M37 46 Q60 55 83 46" stroke="url(#cord)" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path d="M56 52 Q40 60 33 78 M64 52 Q80 60 87 78" stroke="#c4123d" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M30 78 h6 l-1 10 h-4 Z M84 78 h6 l-1 10 h-4 Z" fill="#c4123d"/>
+        <circle cx="60" cy="51" r="5.5" fill="url(#cord)" stroke="#ffd98a" stroke-width="1"/>
+        <circle cx="60" cy="98" r="18" fill="rgba(255,255,255,.25)" stroke="#b3123c" stroke-width="1.3" stroke-dasharray="2.5 2"/>
+        <text x="60" y="105.5" text-anchor="middle" font-size="21" font-weight="700" fill="#b3123c" font-family="Jua,sans-serif">복</text>
+        <path d="M38 98 Q38 94 42 94 Q38 94 38 90 Q38 94 34 94 Q38 94 38 98 Z M82 98 Q82 94 86 94 Q82 94 82 90 Q82 94 78 94 Q82 94 82 98 Z M60 74 Q60 70 64 70 Q60 70 60 66 Q60 70 56 70 Q60 70 60 74 Z" fill="#fffaf0"/>
+      </svg>
+    </div>
+    <div class="locktitle">복 들어오는 우리집 곳간</div>
+    <div class="lockmsg" id="lockmsg">비밀번호를 눌러 곳간 문을 열어주세요</div>
+    <div class="pins" id="pins"></div>
+    <div class="keypad" id="keypad"></div>
+    <div class="lockfoot" id="lockfoot">오늘도 우리 곳간에 별빛 같은 복이 ✦</div>
+  </div>
+</section>
+
+<!-- ============ 본 앱 ============ -->
+<div id="app">
+  <header class="top">
+    <div><div class="brand">우리집 황금곳간</div><div class="sub" id="todayTxt"></div></div>
+    <button class="iconbtn" onclick="lockApp()" title="잠그기">🔒</button>
+  </header>
+
+  <div id="modeBanner"></div>
+
+  <section class="view on" id="v-home"></section>
+  <section class="view" id="v-add"></section>
+  <section class="view" id="v-over"></section>
+  <section class="view" id="v-ana"></section>
+  <section class="view" id="v-set"></section>
+</div>
+
+<button class="fab" id="fab" onclick="go('add')" aria-label="기록하기">＋</button>
+<nav class="tabs" id="tabs"><div class="in">
+  <button data-v="home" class="on" onclick="go('home')"><span class="e">🏠</span>홈</button>
+  <button data-v="add" onclick="go('add')"><span class="e">✍️</span>기록</button>
+  <button data-v="over" onclick="go('over')"><span class="e">📒</span>한눈에</button>
+  <button data-v="ana" onclick="go('ana')"><span class="e">🔍</span>분석</button>
+  <button data-v="set" onclick="go('set')"><span class="e">⚙️</span>설정</button>
+</div></nav>
+<div id="toast"></div>
+<div id="busy"><div id="busyTxt">곳간 문 여는 중…</div></div>
+
+<script>
+/* =========================================================
+   1) 구글시트 연결 주소 — Apps Script 웹앱 URL을 여기에 붙여넣으세요
+      (비워두면 이 기기에만 저장되는 '로컬 모드'로 동작)
+   ========================================================= */
+const DEFAULT_API_URL = 'https://script.google.com/macros/s/AKfycbzZ5_GtnE_vZ2tfj3xRgCO395UMdopYWVn9ZUtIjhPQbxDMF-xWW0hxx7HAQJMZfnCx/exec';
+
+/* ===== 기본 데이터 ===== */
+const TYPES = ['수입','고정지출','변동지출','저축'];
+const CATS = {
+  '수입':['월급','성과급','부수입','기타수입'],
+  '고정지출':['주거/관리비','통신비','보험','대출이자','구독','교통(정기)','용돈','기타고정'],
+  '변동지출':['식비','외식/배달','카페/간식','생활용품','쇼핑/의류','교통/차량','의료/건강','문화/여가','경조사/선물','여행','기타'],
+  '저축':['적금','예금','투자','비상금','청약']
+};
+const ICON = {'월급':'💰','성과급':'🎁','부수입':'🪙','기타수입':'💵','주거/관리비':'🏠','통신비':'📱','보험':'🛡️','대출이자':'🏦','구독':'📺','교통(정기)':'🚇','용돈':'👛','기타고정':'📌',
+  '식비':'🛒','외식/배달':'🍜','카페/간식':'☕','생활용품':'🧴','쇼핑/의류':'👗','교통/차량':'🚗','의료/건강':'💊','문화/여가':'🎬','경조사/선물':'💐','여행':'✈️','기타':'🧾',
+  '적금':'🐷','예금':'🏛️','투자':'📈','비상금':'🧯','청약':'🏡'};
+const TIPS = {
+  '식비':'장보기 전 냉장고 사진을 찍고 목록대로만 사기. "1+1"은 진짜 필요할 때만!',
+  '외식/배달':'배달은 "주 2회" 같은 우리 둘만의 규칙을 정해보세요. 배달비·최소주문 금액만 줄여도 커요.',
+  '카페/간식':'주중엔 텀블러 + 집 커피, 카페는 주말 데이트용으로 아껴두기.',
+  '생활용품':'재고 확인 후 구매, 자주 쓰는 건 대용량·정기배송 가격 비교.',
+  '쇼핑/의류':'장바구니에 담고 48시간 뒤에도 갖고 싶으면 그때 결제하기.',
+  '교통/차량':'교통비 환급 카드 혜택 확인, 짧은 거리는 걷기·대중교통으로.',
+  '의료/건강':'꼭 필요한 지출이에요. 대신 실손보험 청구를 놓치지 마세요.',
+  '문화/여가':'OTT는 하나만 돌려가며 구독, 무료 전시·도서관도 데이트 코스로.',
+  '경조사/선물':'관계별 경조사 기준 금액을 둘이 미리 정해두면 고민도 지출도 줄어요.',
+  '여행':'여행 전용 통장에 매달 조금씩 적립해서 목돈 지출 충격 줄이기.',
+  '기타':'"기타"가 커지면 어디로 새는지 메모를 조금 더 꼼꼼히 남겨봐요.',
+  '통신비':'알뜰폰·가족결합 할인을 점검하면 매달 고정으로 아껴져요.',
+  '구독':'최근 한 달 안 쓴 구독은 바로 해지!',
+  '보험':'중복 보장은 없는지 1년에 한 번 점검해요.',
+  '대출이자':'금리인하요구권, 대환대출 조건을 확인해보세요.',
+  '주거/관리비':'대기전력·난방 온도 1도만 조절해도 관리비가 내려가요.',
+  '용돈':'용돈 범위를 둘이 다시 합의해보는 것도 방법이에요.'
+};
+const PALETTE = ['#ffb800','#ff8fb1','#6cb8ff','#3fcfaa','#b49cff','#ffa96b','#ffe066','#7fd6ff','#f78fd8','#a3e36b','#ff7a7a','#9aa8ff','#ffcf8a','#5ee0c8'];
+const DEFAULT_SETTINGS = {goal:20000000, nameA:'남편', nameB:'아내'};
+
+/* ===== 유틸 ===== */
+const $ = s => document.querySelector(s);
+const pad = n => String(n).padStart(2,'0');
+const won = n => (Math.round(+n||0)).toLocaleString('ko-KR') + '원';
+const man = n => { n = Math.round(+n||0); const a = Math.abs(n);
+  if (a >= 100000000) return (n/100000000).toFixed(2).replace(/\.?0+$/,'') + '억';
+  if (a >= 10000) return (n/10000).toFixed(a>=1000000?0:1).replace(/\.0$/,'') + '만';
+  return n.toLocaleString('ko-KR'); };
+const sign = n => (n>0?'+':'') + won(n);
+const esc = s => String(s??'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const today = () => { const d = new Date(); return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; };
+const curMonth = () => today().slice(0,7);
+const addMonth = (m,k) => { let [y,mo] = m.split('-').map(Number); mo += k; while(mo<1){mo+=12;y--} while(mo>12){mo-=12;y++} return `${y}-${pad(mo)}`; };
+const daysIn = m => { const [y,mo] = m.split('-').map(Number); return new Date(y,mo,0).getDate(); };
+const mLabel = m => `${m.slice(0,4)}년 ${+m.slice(5,7)}월`;
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+const sum = arr => arr.reduce((a,b)=>a+(+b||0),0);
+
+const MEM = {};
+const LS = {
+  get(k,d){ try{ const v = localStorage.getItem(k); return v==null ? (k in MEM ? MEM[k] : d) : JSON.parse(v); }catch(e){ return k in MEM ? MEM[k] : d; } },
+  set(k,v){ MEM[k]=v; try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} },
+  del(k){ delete MEM[k]; try{ localStorage.removeItem(k); }catch(e){} }
+};
+async function sha(text){
+  try{ const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('gold:'+text));
+       return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join(''); }
+  catch(e){ let h=5381; for(const c of 'gold:'+text) h=((h<<5)+h+c.charCodeAt(0))|0; return 'f'+h; }
+}
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('on'); clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove('on'),2200); }
+function busy(on,txt){ $('#busy').classList.toggle('on',on); if(txt) $('#busyTxt').textContent=txt; }
+
+/* ===== 데이터 계층: 구글시트(Apps Script) 또는 로컬 ===== */
+const session = { pw:'' };
+const Api = {
+  url(){ return String(LS.get('gb_api','') || DEFAULT_API_URL || '').trim(); },
+  remote(){ return !!this.url(); },
+  async call(action, data={}){
+    if(!this.remote()) return Local.call(action, data);
+    const res = await fetch(this.url(), { method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify(Object.assign({action, pw:session.pw}, data)) });
+    const j = await res.json();
+    if(!j.ok) throw new Error(j.error || '요청에 실패했어요');
+    return j.data;
+  }
+};
+const Local = {
+  db(){ return LS.get('gb_db', {tx:[], fixed:[], settings:{...DEFAULT_SETTINGS}}); },
+  save(d){ LS.set('gb_db', d); },
+  async call(a, p){
+    const d = this.db();
+    switch(a){
+      case 'login': { const h = LS.get('gb_pwhash', null); if(!h || await sha(p.pw||session.pw) !== h) throw new Error('비밀번호가 맞지 않아요'); return true; }
+      case 'getAll': return d;
+      case 'addTx': d.tx.push(p.item); this.save(d); return p.item;
+      case 'addTxBatch': d.tx.push(...p.items); this.save(d); return p.items.length;
+      case 'deleteTx': d.tx = d.tx.filter(t=>t.id!==p.id); this.save(d); return true;
+      case 'addFixed': d.fixed.push(p.item); this.save(d); return p.item;
+      case 'deleteFixed': d.fixed = d.fixed.filter(t=>t.id!==p.id); this.save(d); return true;
+      case 'saveSettings': d.settings = p.settings; this.save(d); return true;
+      case 'changePw': LS.set('gb_pwhash', await sha(p.newPw)); return true;
+    }
+    throw new Error('알 수 없는 요청');
+  }
+};
+
+/* ===== 상태 ===== */
+const state = { tx:[], fixed:[], settings:{...DEFAULT_SETTINGS}, view:'home', month:curMonth(),
+  form:{type:'변동지출', cat:'식비', who:'공동'} };
+
+async function loadAll(){
+  const d = await Api.call('getAll');
+  state.tx = (d.tx||[]).map(t=>({...t, amount:+t.amount||0, date:String(t.date).slice(0,10)}));
+  state.fixed = (d.fixed||[]).map(f=>({...f, amount:+f.amount||0}));
+  state.settings = Object.assign({...DEFAULT_SETTINGS}, d.settings||{});
+  state.settings.goal = +state.settings.goal || DEFAULT_SETTINGS.goal;
+}
+
+/* ===== 계산 ===== */
+function stats(m){
+  const list = state.tx.filter(t => t.date.slice(0,7) === m);
+  const s = {list, income:0, salary:0, bonus:0, otherIn:0, fixed:0, variable:0, saving:0, cat:{}, catVar:{}, who:{}};
+  for(const t of list){
+    const a = +t.amount||0;
+    if(t.type==='수입'){ s.income+=a; if(t.cat==='월급') s.salary+=a; else if(t.cat==='성과급') s.bonus+=a; else s.otherIn+=a; }
+    else if(t.type==='저축'){ s.saving+=a; }
+    else {
+      if(t.type==='고정지출') s.fixed+=a; else { s.variable+=a; s.catVar[t.cat]=(s.catVar[t.cat]||0)+a; }
+      s.cat[t.cat]=(s.cat[t.cat]||0)+a;
+      const w = t.who||'공동'; s.who[w]=(s.who[w]||0)+a;
+    }
+  }
+  s.spend = s.fixed + s.variable;
+  s.left = s.income - s.spend - s.saving;
+  return s;
+}
+function plan(m){
+  const y = m.slice(0,4), mi = +m.slice(5,7), goal = +state.settings.goal || 20000000;
+  const sav = state.tx.filter(t=>t.type==='저축' && t.date.slice(0,4)===y);
+  const savedBefore = sum(sav.filter(t=>t.date.slice(0,7) < m).map(t=>t.amount));
+  const savedThis = sum(sav.filter(t=>t.date.slice(0,7) === m).map(t=>t.amount));
+  const monthsLeft = 12 - mi + 1;
+  const need = Math.max(0, Math.ceil((goal - savedBefore) / monthsLeft / 1000) * 1000);
+  return {goal, savedBefore, savedThis, savedThrough:savedBefore+savedThis, monthsLeft, need, base:goal/12, mi};
+}
+function budget(m, s, p){
+  let regular = s.salary + s.otherIn, est = false;
+  if(regular === 0){ const ps = stats(addMonth(m,-1)); regular = ps.salary + ps.otherIn; est = regular > 0; }
+  const fixedTpl = sum(state.fixed.map(f=>f.amount));
+  const fixedPlan = Math.max(s.fixed, fixedTpl);
+  const living = regular - fixedPlan - p.need;
+  const dim = daysIn(m), isCur = m === curMonth();
+  const day = isCur ? new Date().getDate() : (m < curMonth() ? dim : 0);
+  const daysLeft = isCur ? dim - day + 1 : 0;
+  const remain = living - s.variable;
+  return {regular, est, fixedPlan, living, remain, perDay: daysLeft>0 ? remain/daysLeft : 0, day, dim, daysLeft,
+          expected: living>0 ? living*day/dim : 0, spent:s.variable, isCur};
+}
+function compare(m){
+  const a = stats(m), b = stats(addMonth(m,-1));
+  const cats = [...new Set([...Object.keys(a.cat), ...Object.keys(b.cat)])];
+  const rows = cats.map(c => ({c, now:a.cat[c]||0, prev:b.cat[c]||0, diff:(a.cat[c]||0)-(b.cat[c]||0), variable: CATS['변동지출'].includes(c)}))
+                   .sort((x,y)=>y.diff-x.diff);
+  return {a, b, rows};
+}
+function coaches(m){
+  const s = stats(m), p = plan(m), b = budget(m,s,p), out = [];
+  const pm = addMonth(m,-1);
+  if(state.tx.length === 0) return out;
+  if(b.regular > 0 && b.living <= 0)
+    out.push({t:'warn', ic:'🚨', h:'저축 목표를 맞추기엔 고정지출이 무거워요', p:`정기 수입 ${won(b.regular)}에서 고정지출 ${won(b.fixedPlan)}과 이번 달 저축 목표 ${won(p.need)}를 빼면 생활비가 남지 않아요. 설정에서 고정지출을 하나씩 점검해봐요.`});
+  if(b.isCur && b.living > 0){
+    const r = b.spent / b.living, e = b.day / b.dim;
+    if(r > e + 0.1) out.push({t:'warn', ic:'🐢', h:'이번 달 속도가 조금 빨라요', p:`오늘까지 적정 사용액은 ${won(b.expected)}인데 ${won(b.spent)}를 썼어요. 남은 ${b.daysLeft}일은 하루 ${won(Math.max(0,b.perDay))} 안에서 지내면 목표 그대로 지킬 수 있어요.`});
+    else out.push({t:'ok', ic:'🌿', h:'페이스 아주 좋아요!', p:`적정 사용액 ${won(b.expected)}보다 ${won(b.expected-b.spent)} 덜 썼어요. 이대로 가면 이번 달 저축 목표는 문제없어요.`});
+  }
+  if(p.savedThis < p.need){
+    const gap = p.need - p.savedThis;
+    out.push({t: (b.isCur && b.day > 15) ? 'warn':'', ic:'🐷', h:`이번 달 저축 ${won(gap)} 남았어요`, p:'월급날 바로 적금·투자로 "먼저 떼어두기"가 2천만원의 비결이에요. 쓰고 남은 돈이 아니라, 저축하고 남은 돈으로 살기!'});
+  } else out.push({t:'ok', ic:'🏆', h:'이번 달 저축 목표 달성!', p:`${won(p.savedThis)} 저축 완료. 연간 목표에 한 걸음 더 가까워졌어요.`});
+  if(s.bonus > 0){
+    const rest = Math.max(0, p.goal - p.savedThrough);
+    out.push({t:'', ic:'🎁', h:`성과급 ${won(s.bonus)}이 들어왔어요`, p:`최소 70%(${won(s.bonus*0.7)})는 저축으로 보내는 걸 추천해요. 연간 목표까지 남은 금액은 ${won(rest)}예요. 나머지 30%는 둘을 위한 작은 선물로 🎀`});
+  }
+  const c = compare(m).rows.filter(r=>r.variable && r.diff>0 && r.prev>0)[0];
+  if(c && stats(pm).spend > 0) out.push({t:'warn', ic:'🔍', h:`${c.c}가 지난달보다 ${won(c.diff)} 늘었어요`, p: TIPS[c.c] || '어디서 늘었는지 함께 살펴봐요.'});
+  if(p.mi >= 3){
+    const avg = p.savedThrough / p.mi, proj = avg*12;
+    if(proj < p.goal) out.push({t:'warn', ic:'📉', h:`지금 속도라면 연말 ${man(proj)}원 예상`, p:`목표까지 ${man(p.goal-proj)}원 부족해요. 남은 ${p.monthsLeft}개월은 매달 ${won(p.need)}씩 저축하면 따라잡을 수 있어요.`});
+    else out.push({t:'ok', ic:'✨', h:`지금 속도라면 연말 ${man(proj)}원!`, p:'목표 2천만원을 넘길 수 있는 페이스예요. 이대로만!'});
+  }
+  return out;
+}
+
+/* ===== 공통 렌더 조각 ===== */
+function monthNav(){
+  return `<div class="mnav"><button onclick="moveMonth(-1)">‹</button><b>${mLabel(state.month)}</b><button onclick="moveMonth(1)">›</button></div>`;
+}
+function moveMonth(k){ state.month = addMonth(state.month,k); render(); }
+function txRow(t){
+  const sgn = t.type==='수입' ? '+' : (t.type==='저축' ? '→' : '−');
+  return `<div class="tx"><div class="dot d-${t.type}">${ICON[t.cat]||'🧾'}</div>
+    <div class="mid"><b>${esc(t.cat)}${t.memo?` · <span style="display:inline;font-weight:400">${esc(t.memo)}</span>`:''}</b>
+    <span>${t.date.slice(5).replace('-','/')} · ${esc(t.type)} · ${esc(t.who||'공동')}</span></div>
+    <div class="amt t-${t.type}">${sgn}${won(t.amount)}</div>
+    <button class="del" onclick="delTx('${t.id}')" title="삭제">✕</button></div>`;
+}
+
+/* ===== 홈 ===== */
+function renderHome(){
+  const m = curMonth(), s = stats(m), p = plan(m), b = budget(m,s,p);
+  const pct = Math.min(100, p.savedThrough / p.goal * 100);
+  const C = 2*Math.PI*56, off = C*(1-pct/100);
+  const monthPct = p.need>0 ? Math.min(100, p.savedThis/p.need*100) : 100;
+  const usePct = b.living>0 ? Math.min(100, b.spent/b.living*100) : (b.spent>0?100:0);
+  const expPct = b.dim ? b.day/b.dim*100 : 0;
+  const cs = coaches(m);
+  let html = '';
+  if(state.tx.length === 0){
+    html += `<div class="card shimmer"><h3>✨ 황금곳간에 오신 걸 환영해요</h3>
+      <div style="font-size:14px;line-height:1.8">올해 <b>${man(p.goal)}원</b>을 함께 모으기 위한 3단계예요.<br>
+      ① <b>설정</b>에서 매달 나가는 고정지출을 등록해요<br>
+      ② <b>기록</b>에서 이번 달 월급을 입력해요<br>
+      ③ 월급날 <b>저축 먼저</b> 기록! 나머지는 곳간이 하루 예산을 알려드려요</div>
+      <div style="display:flex;gap:8px;margin-top:14px"><button class="btn sm" onclick="go('set')">고정지출 등록하기</button><button class="btn ghost sm" onclick="go('add')">월급 기록하기</button></div></div>`;
+  }
+  html += `<div class="card shimmer"><div class="hero">
+    <div class="ring"><svg width="132" height="132"><defs><linearGradient id="gg" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#ffe066"/><stop offset=".55" stop-color="#ffb800"/><stop offset="1" stop-color="#ff8fb1"/></linearGradient></defs>
+      <circle cx="66" cy="66" r="56" fill="none" stroke="rgba(255,201,60,.22)" stroke-width="12"/>
+      <circle cx="66" cy="66" r="56" fill="none" stroke="url(#gg)" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${off}" style="transition:stroke-dashoffset 1s;filter:drop-shadow(0 0 6px rgba(255,184,0,.6))"/></svg>
+      <div class="c"><b>${pct.toFixed(1)}%</b><span>${m.slice(0,4)} 목표</span></div></div>
+    <div style="flex:1;min-width:0">
+      <div class="muted">올해 함께 모은 돈</div>
+      <div class="big">${won(p.savedThrough)}</div>
+      <div class="muted" style="margin-top:4px">목표 ${won(p.goal)} · 남은 ${won(Math.max(0,p.goal-p.savedThrough))}</div>
+      <div style="margin-top:8px;font-size:13px;line-height:1.5">남은 <b>${p.monthsLeft}개월</b>, 매달 <b class="serif" style="font-size:15px">${won(p.need)}</b>씩이면 달성 🎯</div>
+    </div></div></div>`;
+
+  html += `<div class="card"><h3>🧭 이번 달 우리의 길잡이 <small>${mLabel(m)}</small></h3>
+    <div class="flow">
+      <div class="row"><span>정기 수입${b.est?' <small>(지난달 기준 예상)</small>':''}</span><b>${won(b.regular)}</b></div>
+      <div class="row"><span>− 고정지출</span><b>${won(b.fixedPlan)}</b></div>
+      <div class="row"><span>− 저축 먼저 떼어두기 🐷</span><b>${won(p.need)}</b></div>
+      <div class="total"><span>= 이번 달 생활비 예산</span><span>${won(Math.max(0,b.living))}</span></div>
+    </div>
+    <div class="muted" style="margin-top:14px;display:flex;justify-content:space-between"><span>변동지출 ${won(b.spent)}</span><span>${b.living>0?Math.round(b.spent/b.living*100):0}% 사용</span></div>
+    <div class="bar" style="margin-top:22px"><i class="${usePct>expPct+10?'over':''}" style="width:${usePct}%"></i>${b.isCur?`<div class="mark" data-l="오늘 적정선" style="left:${expPct}%"></div>`:''}</div>
+    ${b.regular===0 ? `<div class="daily"><div class="muted">월급을 기록하면 하루 예산을 계산해드려요</div><button class="btn sm" style="margin-top:8px" onclick="quickAdd('수입','월급')">월급 기록하기</button></div>`
+     : `<div class="daily"><div class="muted">오늘부터 남은 ${b.daysLeft}일 동안</div>
+        <div class="big ${b.remain<0?'bad':''}">하루 ${won(Math.max(0,b.perDay))}</div>
+        <div class="muted">${b.remain>=0?`까지 써도 저축 목표는 지켜져요 ✨ (남은 생활비 ${won(b.remain)})`:`생활비 예산을 ${won(-b.remain)} 넘었어요. 이번 달은 지출을 꼭 멈춰봐요`}</div></div>`}
+  </div>`;
+
+  html += `<div class="card"><h3>🐷 이번 달 저축 <small>${won(p.savedThis)} / ${won(p.need)}</small></h3>
+    <div class="bar"><i style="width:${monthPct}%"></i></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+      <span class="muted">${p.savedThis>=p.need?'이번 달 목표 달성 🎉':`${won(p.need-p.savedThis)} 더 모으면 달성`}</span>
+      <button class="btn sm" onclick="quickAdd('저축','적금')">저축 기록</button></div></div>`;
+
+  if(cs.length) html += `<div class="card"><h3>💬 곳간지기의 한마디</h3>${cs.map(c=>`<div class="coach ${c.t}"><div class="ic">${c.ic}</div><div><b>${c.h}</b>${c.p}</div></div>`).join('')}</div>`;
+
+  const recent = [...s.list].sort((a,b)=>b.date.localeCompare(a.date)||String(b.createdAt||'').localeCompare(String(a.createdAt||''))).slice(0,5);
+  if(recent.length) html += `<div class="card"><h3>🕊️ 최근 기록 <small><a href="#" onclick="state.month=curMonth();go('over');return false" style="color:inherit">전체보기 ›</a></small></h3>${recent.map(txRow).join('')}</div>`;
+  $('#v-home').innerHTML = html;
+}
+
+/* ===== 기록 ===== */
+function renderAdd(){
+  const f = state.form, st = state.settings;
+  const whoOpts = [st.nameA, st.nameB, '공동'];
+  if(!CATS[f.type].includes(f.cat)) f.cat = CATS[f.type][0];
+  const s = stats(state.month);
+  const list = [...s.list].sort((a,b)=>b.date.localeCompare(a.date));
+  const fixedDone = state.fixed.length && state.fixed.every(fx => s.list.some(t=>t.type==='고정지출' && t.memo===fx.name));
+  $('#v-add').innerHTML = `
+  <div class="card"><h3>✍️ 기록하기</h3>
+    <div class="seg">${TYPES.map(t=>`<div class="chip ${f.type===t?'on':''}" onclick="setForm('type','${t}')">${t}</div>`).join('')}</div>
+    <label class="f">카테고리</label>
+    <div class="chips">${CATS[f.type].map(c=>`<div class="chip ${f.cat===c?'on':''}" onclick="setForm('cat','${c}')">${ICON[c]||''} ${c}</div>`).join('')}</div>
+    <label class="f">금액</label>
+    <input class="in amount" id="fAmt" inputmode="numeric" placeholder="0" value="${f.amount?Number(f.amount).toLocaleString('ko-KR'):''}" oninput="fmtAmt(this)">
+    <div class="quick">${[10000,50000,100000,1000000].map(v=>`<div class="chip" onclick="bump(${v})">+${man(v)}</div>`).join('')}<div class="chip" onclick="bump(0)">지우기</div></div>
+    <div class="grid2"><div><label class="f">날짜</label><input class="in" type="date" id="fDate" value="${f.date||today()}" onchange="state.form.date=this.value"></div>
+      <div><label class="f">누가</label><select class="in" id="fWho" onchange="state.form.who=this.value">${whoOpts.map(w=>`<option ${f.who===w?'selected':''}>${esc(w)}</option>`).join('')}</select></div></div>
+    <label class="f">메모</label>
+    <input class="in" id="fMemo" placeholder="예) 마트 장보기, 엄마 생신 선물" value="${esc(f.memo||'')}" oninput="state.form.memo=this.value">
+    ${f.type==='변동지출'?budgetHint():''}
+    <button class="btn full" style="margin-top:16px" onclick="saveTx()">곳간에 기록하기 ✨</button>
+  </div>
+  ${state.fixed.length?`<div class="card"><h3>📌 고정지출 한 번에 등록 <small>${mLabel(state.month)}</small></h3>
+    <div class="muted">설정에 등록한 고정지출 ${state.fixed.length}건 · 합계 ${won(sum(state.fixed.map(x=>x.amount)))}</div>
+    <button class="btn ${fixedDone?'ghost':''} full" style="margin-top:10px" onclick="applyFixed()">${fixedDone?'이번 달 등록 완료 ✓':'이번 달 고정지출 일괄 등록'}</button></div>`:''}
+  <div class="card">${monthNav()}<h3>📜 ${+state.month.slice(5)}월 기록 <small>${list.length}건</small></h3>
+    ${list.length?list.map(txRow).join(''):'<div class="empty">아직 기록이 없어요</div>'}</div>`;
+}
+function budgetHint(){
+  const m = curMonth(), s = stats(m), p = plan(m), b = budget(m,s,p);
+  if(b.regular===0) return '';
+  return `<div class="banner" style="margin-top:12px">💡 이번 달 남은 생활비 <b>${won(b.remain)}</b> · 오늘 하루 <b>${won(Math.max(0,b.perDay))}</b>까지 괜찮아요</div>`;
+}
+function setForm(k,v){ readForm(); state.form[k]=v; if(k==='type') state.form.cat = CATS[v][0]; renderAdd(); }
+function readForm(){ const a=$('#fAmt'); if(a){ state.form.amount = +a.value.replace(/[^\d]/g,'')||0; state.form.date=$('#fDate').value; state.form.who=$('#fWho').value; state.form.memo=$('#fMemo').value; } }
+function fmtAmt(el){ const n = el.value.replace(/[^\d]/g,''); el.value = n ? Number(n).toLocaleString('ko-KR') : ''; state.form.amount = +n||0; }
+function bump(v){ const el=$('#fAmt'); const n = v===0 ? 0 : (+el.value.replace(/[^\d]/g,'')||0) + v; el.value = n? n.toLocaleString('ko-KR') : ''; state.form.amount=n; }
+function quickAdd(type,cat){ state.form = {...state.form, type, cat, amount:0, memo:'', date:today()}; go('add'); }
+async function saveTx(){
+  readForm(); const f = state.form;
+  if(!f.amount){ toast('금액을 입력해주세요'); return; }
+  const item = {id:uid(), date:f.date||today(), type:f.type, cat:f.cat, amount:f.amount, memo:(f.memo||'').trim(), who:f.who||'공동', createdAt:new Date().toISOString()};
+  busy(true,'곳간에 넣는 중…');
+  try{ await Api.call('addTx',{item}); state.tx.push(item);
+    state.form.amount=0; state.form.memo='';
+    toast(item.type==='저축' ? '🐷 저축 완료! 목표에 한 걸음 더' : item.type==='수입' ? '💰 수입이 들어왔어요!' : '기록했어요 ✨');
+    state.month = item.date.slice(0,7); renderAdd();
+  }catch(e){ toast(e.message); } finally{ busy(false); }
+}
+async function delTx(id){
+  if(!confirm('이 기록을 삭제할까요?')) return;
+  busy(true,'정리하는 중…');
+  try{ await Api.call('deleteTx',{id}); state.tx = state.tx.filter(t=>t.id!==id); render(); toast('삭제했어요'); }
+  catch(e){ toast(e.message); } finally{ busy(false); }
+}
+async function applyFixed(){
+  const m = state.month, s = stats(m);
+  const todo = state.fixed.filter(fx => !s.list.some(t=>t.type==='고정지출' && t.memo===fx.name));
+  if(!todo.length){ toast('이번 달 고정지출은 이미 다 등록됐어요'); return; }
+  const items = todo.map(fx => ({id:uid(), date:`${m}-${pad(Math.min(+fx.day||1, daysIn(m)))}`, type:'고정지출', cat:fx.cat, amount:+fx.amount, memo:fx.name, who:'공동', createdAt:new Date().toISOString()}));
+  busy(true,'고정지출 등록 중…');
+  try{ await Api.call('addTxBatch',{items}); state.tx.push(...items); renderAdd(); toast(`고정지출 ${items.length}건 등록 완료`); }
+  catch(e){ toast(e.message); } finally{ busy(false); }
+}
+
+/* ===== 한눈에 ===== */
+function renderOver(){
+  const m = state.month, s = stats(m), st = state.settings;
+  const total = Math.max(s.income, s.spend + s.saving, 1);
+  const seg = [['고정지출',s.fixed,'#b49cff'],['변동지출',s.variable,'#ff8fb1'],['저축',s.saving,'#ffc93c'],['남은 돈',Math.max(0,s.left),'#3fcfaa']];
+  const cats = Object.entries(s.cat).sort((a,b)=>b[1]-a[1]);
+  let acc = 0; const stops = cats.map(([c,v],i)=>{ const a0=acc/s.spend*360; acc+=v; const a1=acc/s.spend*360; return `${PALETTE[i%PALETTE.length]} ${a0}deg ${a1}deg`; });
+  const y = m.slice(0,4);
+  const yrRows = Array.from({length:12},(_,i)=>{ const mm=`${y}-${pad(i+1)}`; const x=stats(mm); return {mm, ...x}; });
+  const yt = {income:sum(yrRows.map(r=>r.income)), spend:sum(yrRows.map(r=>r.spend)), saving:sum(yrRows.map(r=>r.saving))};
+  const byType = t => s.list.filter(x=>x.type===t).sort((a,b)=>b.date.localeCompare(a.date));
+  $('#v-over').innerHTML = `${monthNav()}
+  <div class="card shimmer"><h3>📒 ${+m.slice(5)}월 한눈에 보기</h3>
+    <div class="grid2">
+      <div class="mini"><div class="l">💰 총 수입</div><div class="v good">${won(s.income)}</div><div class="l" style="margin-top:4px">월급 ${man(s.salary)} · 성과급 ${man(s.bonus)} · 기타 ${man(s.otherIn)}</div></div>
+      <div class="mini"><div class="l">🐷 저축</div><div class="v" style="color:#9a6a00">${won(s.saving)}</div><div class="l" style="margin-top:4px">저축률 ${s.income?Math.round(s.saving/s.income*100):0}%</div></div>
+      <div class="mini"><div class="l">📌 고정지출</div><div class="v">${won(s.fixed)}</div></div>
+      <div class="mini"><div class="l">🛒 변동지출</div><div class="v">${won(s.variable)}</div></div>
+    </div>
+    <div style="margin-top:14px" class="muted">수입이 어디로 갔을까?</div>
+    <div class="stack">${seg.map(([n,v,c])=>v>0?`<div title="${n}" style="width:${v/total*100}%;background:${c}"></div>`:'').join('')}</div>
+    <div class="legend" style="display:flex;flex-wrap:wrap;gap:4px 14px">${seg.map(([n,v,c])=>`<div><i style="background:${c}"></i>${n} <b style="margin-left:4px">${man(v)}</b></div>`).join('')}</div>
+    <div class="row" style="margin-top:8px;border-top:1px dashed var(--line)"><span>통장에 남은 돈</span><b class="${s.left<0?'bad':'good'}">${won(s.left)}</b></div>
+  </div>
+  <div class="card"><h3>🍩 어디에 썼을까 <small>지출 ${won(s.spend)}</small></h3>
+    ${cats.length?`<div class="donutwrap"><div class="donut" style="background:conic-gradient(${stops.join(',')})"></div>
+      <div class="legend">${cats.slice(0,8).map(([c,v],i)=>`<div><i style="background:${PALETTE[i%PALETTE.length]}"></i>${ICON[c]||''} ${c}<span>${man(v)}</span></div>`).join('')}</div></div>`:'<div class="empty">지출 기록이 없어요</div>'}
+    ${Object.keys(s.who).length?`<div style="margin-top:12px">${Object.entries(s.who).map(([w,v])=>`<div class="row"><span>${w==='공동'?'👫':'🙂'} ${esc(w)}</span><b>${won(v)}</b></div>`).join('')}</div>`:''}
+  </div>
+  ${TYPES.map(t=>{ const l=byType(t); return l.length?`<div class="card"><h3>${t==='수입'?'💰':t==='저축'?'🐷':t==='고정지출'?'📌':'🛒'} ${t} <small>${won(sum(l.map(x=>x.amount)))} · ${l.length}건</small></h3>${l.map(txRow).join('')}</div>`:''; }).join('')}
+  <div class="card"><h3>🗓️ ${y}년 월별 흐름</h3>
+    <table class="yr"><tr><th>월</th><th>수입</th><th>지출</th><th>저축</th><th>저축률</th></tr>
+    ${yrRows.map(r=>`<tr class="${r.mm===m?'now':''}"><td>${+r.mm.slice(5)}월</td><td>${man(r.income)}</td><td>${man(r.spend)}</td><td>${man(r.saving)}</td><td>${r.income?Math.round(r.saving/r.income*100)+'%':'-'}</td></tr>`).join('')}
+    <tr><td><b>합계</b></td><td><b>${man(yt.income)}</b></td><td><b>${man(yt.spend)}</b></td><td><b>${man(yt.saving)}</b></td><td><b>${yt.income?Math.round(yt.saving/yt.income*100)+'%':'-'}</b></td></tr></table>
+    <div class="muted" style="margin-top:8px">목표 ${man(st.goal)}원 중 ${man(yt.saving)}원 (${(yt.saving/st.goal*100).toFixed(1)}%)</div>
+  </div>`;
+}
+
+/* ===== 분석 ===== */
+function renderAna(){
+  const m = state.month, pm = addMonth(m,-1), {a, b, rows} = compare(m);
+  const diff = a.spend - b.spend;
+  const maxV = Math.max(1, ...rows.map(r=>Math.max(r.now,r.prev)));
+  let tips = rows.filter(r=>r.diff>0 && r.variable).slice(0,3).map(r=>({c:r.c, cut:r.diff, why:`지난달보다 ${won(r.diff)} 늘었어요`}));
+  if(tips.length < 3){
+    const used = new Set(tips.map(t=>t.c));
+    Object.entries(a.catVar).sort((x,y)=>y[1]-x[1]).filter(([c])=>!used.has(c)&&c!=='의료/건강').slice(0,3-tips.length)
+      .forEach(([c,v])=>tips.push({c, cut:Math.round(v*0.15/1000)*1000, why:`이번 달 ${won(v)} · 15%만 줄여도`}));
+  }
+  const trendMonths = Array.from({length:6},(_,i)=>addMonth(m,i-5));
+  const tr = trendMonths.map(mm=>({mm, ...stats(mm)}));
+  const tMax = Math.max(1, ...tr.map(t=>Math.max(t.spend,t.saving)));
+  const p = plan(m);
+  $('#v-ana').innerHTML = `${monthNav()}
+  <div class="card shimmer"><h3>🔍 지난달과 비교 <small>${+pm.slice(5)}월 → ${+m.slice(5)}월</small></h3>
+    <div class="grid2">
+      <div class="mini"><div class="l">${+m.slice(5)}월 총지출</div><div class="v">${won(a.spend)}</div></div>
+      <div class="mini"><div class="l">지난달 대비</div><div class="v ${diff>0?'bad':'good'}">${b.spend||a.spend?sign(diff):'-'}</div><div class="l">${b.spend?`${diff>0?'▲':'▼'} ${Math.abs(Math.round(diff/b.spend*100))}%`:'지난달 기록 없음'}</div></div>
+      <div class="mini"><div class="l">저축</div><div class="v">${won(a.saving)}</div><div class="l">${sign(a.saving-b.saving)}</div></div>
+      <div class="mini"><div class="l">저축 목표 대비</div><div class="v ${a.saving>=p.need?'good':'bad'}">${p.need?Math.round(a.saving/p.need*100):100}%</div><div class="l">목표 ${man(p.need)}</div></div>
+    </div>
+    <div class="coach ${diff>0?'warn':'ok'}" style="margin-top:12px"><div class="ic">${diff>0?'📈':'📉'}</div><div>${
+      !b.spend ? '지난달 기록이 쌓이면 더 정확한 비교를 해드릴게요.' :
+      diff>0 ? `<b>지난달보다 ${won(diff)} 더 썼어요</b>이 차이를 그대로 저축으로 돌리면 1년에 <b>${won(diff*12)}</b>이에요.`
+             : `<b>지난달보다 ${won(-diff)} 아꼈어요! 👏</b>아낀 만큼 바로 저축으로 옮겨두면 연간 목표가 훨씬 가까워져요.`}</div></div>
+  </div>
+  <div class="card"><h3>✂️ 여기서 아껴봐요 TOP ${tips.length}</h3>
+    ${tips.length?tips.map((t,i)=>`<div class="save-tip"><div class="t"><span><span class="rank">${i+1}</span>${ICON[t.c]||''} ${t.c}</span><span class="good">월 ${man(t.cut)} 절약</span></div>
+      <p>${t.why}. ${TIPS[t.c]||''}<br><b>→ 1년이면 ${won(t.cut*12)}</b></p></div>`).join('')
+      +`<div class="banner" style="margin:6px 0 0">🎯 세 가지만 지켜도 월 <b>${won(sum(tips.map(t=>t.cut)))}</b>, 1년 <b>${won(sum(tips.map(t=>t.cut))*12)}</b>을 더 모을 수 있어요.</div>`
+      :'<div class="empty">변동지출 기록이 쌓이면 아낄 곳을 찾아드릴게요</div>'}
+  </div>
+  <div class="card"><h3>📊 카테고리별 증감</h3>
+    ${rows.length?rows.map(r=>`<div class="cmp"><div class="h"><span>${ICON[r.c]||''} ${r.c}</span><b class="${r.diff>0?'bad':r.diff<0?'good':''}">${r.diff?sign(r.diff):'변화 없음'}</b></div>
+      <div class="bars"><span>지난달</span><div class="b" style="width:${r.prev/maxV*100}%;background:#f1e6c8"></div><span>이번달</span><div class="b" style="width:${r.now/maxV*100}%;background:${r.diff>0?'#ff8fb1':'#3fcfaa'}"></div></div></div>`).join(''):'<div class="empty">비교할 기록이 없어요</div>'}
+  </div>
+  <div class="card"><h3>📈 최근 6개월 흐름</h3>
+    <div class="trend">${tr.map(t=>`<div class="col"><div class="pair"><div title="지출 ${won(t.spend)}" style="height:${t.spend/tMax*100}%;background:linear-gradient(#ffc1d6,#ff8fb1)"></div><div title="저축 ${won(t.saving)}" style="height:${t.saving/tMax*100}%;background:linear-gradient(#ffe066,#ffb800)"></div></div><small>${+t.mm.slice(5)}월</small></div>`).join('')}</div>
+    <div class="legend" style="display:flex;gap:14px;margin-top:8px"><div><i style="background:#ff8fb1"></i>지출</div><div><i style="background:#ffb800"></i>저축</div></div>
+  </div>`;
+}
+
+/* ===== 설정 ===== */
+function renderSet(){
+  const st = state.settings, remote = Api.remote();
+  $('#v-set').innerHTML = `
+  <div class="card"><h3>🎯 우리의 목표</h3>
+    <label class="f">연간 저축 목표 (원)</label><input class="in" id="sGoal" inputmode="numeric" value="${Number(st.goal).toLocaleString('ko-KR')}" oninput="fmtAmt(this)">
+    <div class="grid2"><div><label class="f">이름 1</label><input class="in" id="sA" value="${esc(st.nameA)}"></div><div><label class="f">이름 2</label><input class="in" id="sB" value="${esc(st.nameB)}"></div></div>
+    <button class="btn full" style="margin-top:14px" onclick="saveSettings()">저장하기</button>
+    <div class="muted" style="margin-top:8px">월 평균 ${won(st.goal/12)} · 주 평균 ${won(st.goal/52)}</div></div>
+
+  <div class="card"><h3>📌 매달 고정지출 <small>합계 ${won(sum(state.fixed.map(f=>f.amount)))}</small></h3>
+    ${state.fixed.length?state.fixed.map(f=>`<div class="tx"><div class="dot d-고정지출">${ICON[f.cat]||'📌'}</div><div class="mid"><b>${esc(f.name)}</b><span>${esc(f.cat)} · 매월 ${f.day}일</span></div><div class="amt">${won(f.amount)}</div><button class="del" onclick="delFixed('${f.id}')">✕</button></div>`).join(''):'<div class="empty">월세·관리비·통신비·보험처럼 매달 나가는 돈을 등록해두면<br>길잡이가 생활비 예산을 정확히 계산해요</div>'}
+    <div class="grid2" style="margin-top:8px"><div><label class="f">항목명</label><input class="in" id="xName" placeholder="예) 아파트 관리비"></div>
+      <div><label class="f">카테고리</label><select class="in" id="xCat">${CATS['고정지출'].map(c=>`<option>${c}</option>`).join('')}</select></div>
+      <div><label class="f">금액</label><input class="in" id="xAmt" inputmode="numeric" oninput="fmtAmt(this)" placeholder="0"></div>
+      <div><label class="f">결제일</label><input class="in" id="xDay" type="number" min="1" max="31" value="25"></div></div>
+    <button class="btn ghost full" style="margin-top:12px" onclick="addFixed()">＋ 고정지출 추가</button></div>
+
+  <div class="card"><h3>🔗 구글시트 연결</h3>
+    <div class="muted" style="line-height:1.6">${remote?'✅ 구글시트에 저장 중이에요. 두 사람이 같은 데이터를 봐요.':'⚠️ 지금은 이 기기에만 저장돼요. 남편과 함께 쓰려면 Apps Script 웹앱 URL을 넣어주세요.'}</div>
+    <label class="f">Apps Script 웹앱 URL</label><input class="in" id="sApi" placeholder="https://script.google.com/macros/s/…/exec" value="${esc(LS.get('gb_api','')||'')}">
+    <button class="btn ghost full" style="margin-top:12px" onclick="saveApi()">연결 저장 (다시 로그인)</button></div>
+
+  <div class="card"><h3>🔒 비밀번호</h3>
+    <div class="grid2"><div><label class="f">새 비밀번호 (숫자 4~8자리)</label><input class="in" id="pw1" type="password" inputmode="numeric"></div><div><label class="f">한 번 더</label><input class="in" id="pw2" type="password" inputmode="numeric"></div></div>
+    <button class="btn ghost full" style="margin-top:12px" onclick="changePw()">비밀번호 바꾸기</button></div>
+
+  ${!remote?`<div class="card"><h3>🧪 체험하기</h3><div class="muted">3개월치 예시 데이터를 넣어 화면을 미리 볼 수 있어요.</div>
+    <div style="display:flex;gap:8px;margin-top:10px"><button class="btn sm" onclick="seedDemo()">예시 데이터 넣기</button><button class="btn danger sm" onclick="resetLocal()">로컬 데이터 초기화</button></div></div>`:''}
+  <button class="btn ghost full" onclick="lockApp()">🔒 곳간 잠그기</button>`;
+}
+async function saveSettings(){
+  const s = {goal: +$('#sGoal').value.replace(/[^\d]/g,'')||20000000, nameA: $('#sA').value.trim()||'남편', nameB: $('#sB').value.trim()||'아내'};
+  busy(true,'저장 중…');
+  try{ await Api.call('saveSettings',{settings:s}); state.settings = s; toast('목표를 저장했어요 🎯'); render(); }
+  catch(e){ toast(e.message); } finally{ busy(false); }
+}
+async function addFixed(){
+  const item = {id:uid(), name:$('#xName').value.trim(), cat:$('#xCat').value, amount:+$('#xAmt').value.replace(/[^\d]/g,'')||0, day:Math.min(31,Math.max(1,+$('#xDay').value||1))};
+  if(!item.name || !item.amount){ toast('항목명과 금액을 입력해주세요'); return; }
+  busy(true,'저장 중…');
+  try{ await Api.call('addFixed',{item}); state.fixed.push(item); renderSet(); toast('고정지출을 추가했어요'); }
+  catch(e){ toast(e.message); } finally{ busy(false); }
+}
+async function delFixed(id){
+  if(!confirm('이 고정지출 항목을 삭제할까요? (이미 등록된 기록은 남아요)')) return;
+  try{ await Api.call('deleteFixed',{id}); state.fixed = state.fixed.filter(f=>f.id!==id); renderSet(); }catch(e){ toast(e.message); }
+}
+function saveApi(){ const v = $('#sApi').value.trim(); if(v && !/^https:\/\/script\.google\.com\//.test(v)){ toast('script.google.com 주소를 넣어주세요'); return; } LS.set('gb_api', v); toast('연결을 저장했어요. 다시 로그인해주세요'); setTimeout(lockApp, 600); }
+async function changePw(){
+  const a = $('#pw1').value, b = $('#pw2').value;
+  if(!/^\d{4,8}$/.test(a)){ toast('숫자 4~8자리로 정해주세요'); return; }
+  if(a!==b){ toast('두 비밀번호가 달라요'); return; }
+  try{ await Api.call('changePw',{newPw:a}); session.pw = a; toast('비밀번호를 바꿨어요 🔒'); renderSet(); }catch(e){ toast(e.message); }
+}
+async function seedDemo(){
+  const items = [], m0 = curMonth(), r = (a,b)=>Math.round((a+Math.random()*(b-a))/1000)*1000;
+  for(let k=-2;k<=0;k++){
+    const m = addMonth(m0,k), dim = k===0 ? new Date().getDate() : daysIn(m);
+    const push = (d,type,cat,amount,memo,who)=>items.push({id:uid(),date:`${m}-${pad(Math.min(d,daysIn(m)))}`,type,cat,amount,memo,who,createdAt:new Date().toISOString()});
+    push(25,'수입','월급',3800000,'월급',state.settings.nameA); push(10,'수입','월급',3100000,'월급',state.settings.nameB);
+    if(k===-1) push(15,'수입','성과급',2000000,'상반기 성과급',state.settings.nameA);
+    push(25,'고정지출','주거/관리비',1150000,'월세+관리비','공동'); push(20,'고정지출','통신비',98000,'통신비','공동');
+    push(15,'고정지출','보험',260000,'보험','공동'); push(5,'고정지출','구독',32000,'OTT·음악','공동'); push(25,'고정지출','용돈',800000,'용돈','공동');
+    push(26,'저축','적금',k===0?1000000:1500000,'자동이체 적금','공동'); if(k===-1) push(16,'저축','투자',1400000,'성과급 투자','공동');
+    const vcats = ['식비','외식/배달','카페/간식','생활용품','쇼핑/의류','교통/차량','문화/여가'];
+    for(let d=1; d<=dim; d+=2){ const c = vcats[Math.floor(Math.random()*vcats.length)];
+      const amt = c==='식비'?r(30000,90000):c==='외식/배달'?r(18000,45000)*(k===0?1.4:1):c==='카페/간식'?r(5000,14000):c==='쇼핑/의류'?r(20000,120000):r(8000,40000);
+      push(d,'변동지출',c,Math.round(amt/1000)*1000,'',Math.random()<.5?state.settings.nameA:state.settings.nameB); }
+  }
+  await Api.call('addTxBatch',{items}); state.tx.push(...items);
+  if(!state.fixed.length){ const fx=[['월세+관리비','주거/관리비',1150000,25],['통신비','통신비',98000,20],['보험','보험',260000,15],['OTT·음악','구독',32000,5],['용돈','용돈',800000,25]];
+    for(const [name,cat,amount,day] of fx){ const item={id:uid(),name,cat,amount,day}; await Api.call('addFixed',{item}); state.fixed.push(item);} }
+  toast('예시 데이터를 넣었어요 ✨'); go('home');
+}
+function resetLocal(){ if(!confirm('이 기기의 모든 기록을 지울까요? (비밀번호는 유지)')) return; LS.del('gb_db'); state.tx=[]; state.fixed=[]; state.settings={...DEFAULT_SETTINGS}; toast('초기화했어요'); go('home'); }
+
+/* ===== 화면 전환 ===== */
+function go(v){
+  state.view = v;
+  document.querySelectorAll('.view').forEach(el=>el.classList.toggle('on', el.id==='v-'+v));
+  document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.toggle('on', b.dataset.v===v));
+  $('#fab').classList.toggle('on', v!=='add');
+  render(); window.scrollTo({top:0,behavior:'smooth'});
+}
+function render(){
+  const d = new Date(), wk = '일월화수목금토'[d.getDay()];
+  $('#todayTxt').textContent = `${d.getFullYear()}.${pad(d.getMonth()+1)}.${pad(d.getDate())} (${wk}) · 오늘도 반짝이는 하루 ✦`;
+  $('#modeBanner').innerHTML = Api.remote() ? '' : `<div class="banner">💾 지금은 <b>이 기기에만</b> 저장돼요. <a href="#" onclick="go('set');return false" style="color:inherit;font-weight:700">설정 → 구글시트 연결</a>로 둘이 함께 써요.</div>`;
+  ({home:renderHome, add:renderAdd, over:renderOver, ana:renderAna, set:renderSet})[state.view]();
+}
+
+/* ===== 잠금 화면 ===== */
+const Lock = { buf:'', mode:'login', first:'' };
+function initLock(){
+  Lock.buf=''; Lock.first='';
+  if(!Api.remote() && !LS.get('gb_pwhash',null)){ Lock.mode='set1'; lockMsg('처음 오셨네요! 우리 둘만의 비밀번호(숫자 4~8자리)를 정해주세요'); }
+  else { Lock.mode='login'; lockMsg('비밀번호를 눌러 곳간 문을 열어주세요'); }
+  $('#lockfoot').textContent = Api.remote() ? '구글시트 곳간과 연결되어 있어요 ✦' : '오늘도 우리 곳간에 별빛 같은 복이 ✦';
+  drawPins();
+}
+function lockMsg(t,err){ const el=$('#lockmsg'); el.textContent=t; el.classList.toggle('err',!!err); }
+function drawPins(){ const n = Math.max(4, Lock.buf.length); $('#pins').innerHTML = Array.from({length:n},(_,i)=>`<i class="${i<Lock.buf.length?'on':''}"></i>`).join(''); }
+function buildKeypad(){
+  const keys = ['1','2','3','4','5','6','7','8','9','지우기','0','열기'];
+  $('#keypad').innerHTML = keys.map(k=>`<button class="${k==='지우기'?'txt':k==='열기'?'ok':''}" data-k="${k}">${k}</button>`).join('');
+  $('#keypad').addEventListener('click', e=>{ const b=e.target.closest('button'); if(b) press(b.dataset.k); });
+  document.addEventListener('keydown', e=>{ if($('#lock').classList.contains('off')) return;
+    if(/^\d$/.test(e.key)) press(e.key); else if(e.key==='Backspace') press('지우기'); else if(e.key==='Enter') press('열기'); });
+}
+function press(k){
+  if(k==='지우기'){ Lock.buf = Lock.buf.slice(0,-1); }
+  else if(k==='열기'){ submitPin(); return; }
+  else if(Lock.buf.length < 8){ Lock.buf += k; }
+  drawPins();
+}
+function shakeLock(msg){ lockMsg(msg,true); const b=$('#lockbox'); b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake'); Lock.buf=''; drawPins(); }
+async function submitPin(){
+  const pin = Lock.buf;
+  if(pin.length < 4){ shakeLock('4자리 이상 눌러주세요'); return; }
+  if(Lock.mode==='set1'){ Lock.first=pin; Lock.mode='set2'; Lock.buf=''; drawPins(); lockMsg('확인을 위해 한 번 더 눌러주세요'); return; }
+  if(Lock.mode==='set2'){
+    if(pin!==Lock.first){ Lock.mode='set1'; shakeLock('비밀번호가 달라요. 처음부터 다시 정해주세요'); return; }
+    LS.set('gb_pwhash', await sha(pin));
+  }
+  session.pw = pin; busy(true,'곳간 문 여는 중…');
+  try{ await Api.call('login',{pw:pin}); await loadAll(); openApp(); }
+  catch(e){ session.pw=''; Lock.mode = Lock.mode==='set2'?'login':Lock.mode; shakeLock(e.message.includes('fetch')?'구글시트에 연결할 수 없어요. URL을 확인해주세요':e.message); }
+  finally{ busy(false); }
+}
+function openApp(){
+  $('#lock').classList.add('off'); $('#app').classList.add('on'); $('#tabs').classList.add('on');
+  FX.setMode('gold'); state.month = curMonth(); go('home'); toast('복 들어왔어요! 오늘도 반짝반짝 ✨');
+}
+function lockApp(){
+  session.pw=''; state.tx=[]; state.fixed=[];
+  $('#app').classList.remove('on'); $('#tabs').classList.remove('on'); $('#fab').classList.remove('on');
+  $('#lock').classList.remove('off'); FX.setMode('lock'); initLock();
+}
+// 5분 동안 아무 조작이 없으면 자동 잠금
+let idleT; ['click','keydown','touchstart'].forEach(ev=>document.addEventListener(ev,()=>{ clearTimeout(idleT); idleT=setTimeout(()=>{ if($('#app').classList.contains('on')) lockApp(); }, 5*60*1000); },{passive:true}));
+
+/* ===== 별빛 효과 (반짝이는 별 · 금가루 · 보케 · 별똥별) ===== */
+const FX = {
+  c:null, x:null, ps:[], shots:[], mode:'lock', w:0, h:0, sp:{}, reduce: matchMedia('(prefers-reduced-motion: reduce)').matches,
+  init(){
+    this.c=$('#fx'); this.x=this.c.getContext('2d');
+    this.sp = { gold:this.sprite('255,210,110'), white:this.sprite('255,248,225'), rose:this.sprite('255,185,170'), pink:this.sprite('255,130,175'), sky:this.sprite('110,185,255'), cream:this.sprite('255,236,180'), deep:this.sprite('236,168,28') };
+    addEventListener('resize',()=>{ this.size(); this.spawn(); }); this.size(); this.spawn(); this.loop();
+  },
+  sprite(rgb){ const s=document.createElement('canvas'); s.width=s.height=64; const g=s.getContext('2d');
+    const r=g.createRadialGradient(32,32,0,32,32,32); r.addColorStop(0,'rgba(255,255,255,1)'); r.addColorStop(.12,`rgba(${rgb},.95)`);
+    r.addColorStop(.4,`rgba(${rgb},.28)`); r.addColorStop(1,`rgba(${rgb},0)`); g.fillStyle=r; g.fillRect(0,0,64,64); return s; },
+  size(){ const d=Math.min(2,devicePixelRatio||1); this.w=innerWidth; this.h=innerHeight; this.c.width=this.w*d; this.c.height=this.h*d; this.x.setTransform(d,0,0,d,0,0); },
+  setMode(m){ this.mode=m; this.c.style.zIndex = m==='lock'?61:3; this.spawn(); },
+  pal(){ return this.mode==='lock' ? ['white','white','cream','rose','gold'] : ['deep','deep','gold','pink','sky']; },
+  make(k, initial){
+    const R=Math.random, w=this.w, h=this.h, pal=this.pal(), col=pal[Math.floor(R()*pal.length)], lock=this.mode==='lock';
+    if(k==='star') return {k, col, x:R()*w, y:R()*h, r:1+R()*2.4, ph:R()*6.28, sp:.012+R()*.03, vy:.02+R()*.05, big:R()<.18};
+    if(k==='dust') return {k, col, x:R()*w, y:initial?R()*h:-10, r:.6+R()*1.5, vy:(lock?.35:.18)+R()*(lock?.8:.45), vx:(R()-.5)*.25, ph:R()*6.28, sp:.05+R()*.08};
+    return {k, col, x:R()*w, y:R()*h, r:16+R()*38, vy:-(.04+R()*.1), vx:(R()-.5)*.12, ph:R()*6.28, sp:.004+R()*.008, a:(lock?.10:.05)+R()*(lock?.12:.06)};
+  },
+  spawn(){
+    const a=this.w*this.h, f=this.reduce?.35:1, lock=this.mode==='lock';
+    const n = (d,cap)=>Math.min(cap, Math.round(a/d*f));
+    this.ps = [
+      ...Array.from({length:n(lock?6500:13000, 110)},()=>this.make('star',true)),
+      ...Array.from({length:n(lock?11000:22000, 70)},()=>this.make('dust',true)),
+      ...Array.from({length:Math.round((lock?9:5)*f)},()=>this.make('bokeh',true))
+    ];
+    this.shots=[];
+  },
+  flare(x,y,len,a){ const g=this.x, c=this.mode==='lock'?'255,250,230':'226,160,30';
+    for(const [dx,dy,l] of [[1,0,len],[0,1,len*.75]]){
+      const gr=g.createLinearGradient(x-dx*l,y-dy*l,x+dx*l,y+dy*l);
+      gr.addColorStop(0,`rgba(${c},0)`); gr.addColorStop(.5,`rgba(${c},${a})`); gr.addColorStop(1,`rgba(${c},0)`);
+      g.strokeStyle=gr; g.lineWidth=1; g.beginPath(); g.moveTo(x-dx*l,y-dy*l); g.lineTo(x+dx*l,y+dy*l); g.stroke(); }
+  },
+  shoot(){ const R=Math.random;
+    this.shots.push({x:this.w*(.35+R()*.75), y:this.h*R()*.45, vx:-(6+R()*5), vy:2.6+R()*2.4, life:0, max:55+R()*35}); },
+  loop(){
+    const g=this.x, lock=this.mode==='lock'; g.clearRect(0,0,this.w,this.h);
+    g.globalCompositeOperation='source-over';
+    for(const p of this.ps){
+      if(!this.reduce){ p.y+=p.vy; p.x+=(p.vx||0)+(p.k==='dust'?Math.sin(p.ph)*.3:0); p.ph+=p.sp; }
+      if(p.k==='dust' && p.y>this.h+10) Object.assign(p,this.make('dust',false));
+      if(p.y>this.h+10) p.y=-10; if(p.y<-60) p.y=this.h+50;
+      if(p.x<-60) p.x=this.w+50; if(p.x>this.w+60) p.x=-50;
+      const img=this.sp[p.col];
+      if(p.k==='bokeh'){
+        g.globalAlpha = p.a*(.55+.45*Math.sin(p.ph)); g.drawImage(img,p.x-p.r,p.y-p.r,p.r*2,p.r*2);
+      } else if(p.k==='star'){
+        const a = .15 + .85*Math.pow(Math.abs(Math.sin(p.ph)),3);
+        const s = p.r*(p.big?9:6);
+        g.globalAlpha=a; g.drawImage(img,p.x-s/2,p.y-s/2,s,s);
+        if(p.big && a>.55){ g.globalAlpha=1; this.flare(p.x,p.y,p.r*9*a,a*.9); }
+      } else {
+        g.globalAlpha = .45+.55*Math.abs(Math.sin(p.ph)); const s=p.r*5; g.drawImage(img,p.x-s/2,p.y-s/2,s,s);
+      }
+    }
+    if(!this.reduce && Math.random() < (lock?.012:.006)) this.shoot();
+    this.shots = this.shots.filter(s=>{
+      s.x+=s.vx; s.y+=s.vy; s.life++;
+      const k = s.life<10 ? s.life/10 : Math.max(0,1-(s.life-10)/(s.max-10));
+      const tx=s.x-s.vx*14, ty=s.y-s.vy*14;
+      const gr=g.createLinearGradient(s.x,s.y,tx,ty); gr.addColorStop(0,lock?`rgba(255,250,235,${.95*k})`:`rgba(226,160,30,${.85*k})`); gr.addColorStop(1,'rgba(255,220,150,0)');
+      g.globalAlpha=1; g.strokeStyle=gr; g.lineWidth=1.8; g.lineCap='round'; g.beginPath(); g.moveTo(s.x,s.y); g.lineTo(tx,ty); g.stroke();
+      g.globalAlpha=k; g.drawImage(lock?this.sp.white:this.sp.deep,s.x-9,s.y-9,18,18);
+      return s.life<s.max;
+    });
+    g.globalAlpha=1; g.globalCompositeOperation='source-over';
+    if(!this.reduce) requestAnimationFrame(()=>this.loop());
+  }
+};
+
+/* ===== 시작 ===== */
+buildKeypad(); FX.init(); FX.setMode('lock'); initLock();
+</script>
+</body>
+</html>
