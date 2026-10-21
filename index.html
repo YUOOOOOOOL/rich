@@ -150,6 +150,24 @@ input.in:focus,select.in:focus{border-color:var(--pink);box-shadow:0 0 0 4px rgb
 .sync.on{display:inline-flex}
 @keyframes pulse{50%{opacity:.55}}
 
+/* 재산 / 카드 */
+.goalnote{padding:14px 16px;border-radius:22px;margin-bottom:14px;cursor:pointer;background:linear-gradient(135deg,#fff6c9,#ffe4ee);border:2px dashed #ffc6da}
+.gn-h{font-family:var(--cute);font-size:16px}
+.gn-h b{font-family:var(--cute);color:#e09a00}
+.gn-p{font-size:12.5px;line-height:1.55;color:#7a5a22}
+.agroup{font-family:var(--cute);font-size:14px;color:var(--ink2);margin:14px 0 2px}
+.card h3+.agroup{margin-top:0}
+.arow{display:flex;align-items:center;gap:8px;padding:8px 0;border-top:1.5px dashed var(--line)}
+.agroup+.arow{border-top:none}
+.arow .nm{flex:1;min-width:0;font-size:14px}
+.arow .nm small{display:block;color:var(--ink2);font-size:11.5px}
+.arow .fixamt{width:128px;flex:none;padding:8px 10px;text-align:right;font-family:var(--cute);font-size:15px}
+.arow .del{border:none;background:none;color:#d8bfa0;font-size:16px;cursor:pointer;padding:4px}
+.seg.pay{grid-template-columns:1fr 1fr}
+.seg.pay .chip:nth-child(1).on{background:linear-gradient(135deg,#ffe066,#ffb800);box-shadow:0 3px 0 #e09a00;color:var(--ink)}
+.seg.pay .chip:nth-child(2).on{background:linear-gradient(135deg,#b9dbff,#6cb8ff);box-shadow:0 3px 0 #3a8ee0;color:#fff}
+.ctag{font-size:12px}
+
 /* 목록 */
 .tx{display:flex;align-items:center;gap:10px;padding:10px 2px;border-top:1.5px dashed var(--line)}
 .tx:first-child{border-top:none}
@@ -204,14 +222,16 @@ nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;display:none;justify-
   background:rgba(255,253,240,.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:2px solid #fff0b8;border-radius:22px 22px 0 0}
 nav.tabs.on{display:flex}
 nav.tabs .in{display:flex;max-width:640px;width:100%;justify-content:space-around}
-nav.tabs button{border:none;background:none;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:12px;color:var(--ink2);cursor:pointer;padding:5px 12px;border-radius:16px;font-family:var(--cute)}
+nav.tabs button{border:none;background:none;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:12px;color:var(--ink2);cursor:pointer;padding:5px 7px;border-radius:16px;font-family:var(--cute);min-width:50px}
 nav.tabs button .e{font-size:21px;filter:grayscale(.5);opacity:.7;transition:.2s}
 nav.tabs button.on .e{filter:none;opacity:1;transform:translateY(-2px) scale(1.12)}
 nav.tabs button:nth-child(1).on{background:#fff0b8;color:#b07800}
 nav.tabs button:nth-child(2).on{background:#ffe4ee;color:#e8628a}
 nav.tabs button:nth-child(3).on{background:#dcf7ef;color:#16a37f}
 nav.tabs button:nth-child(4).on{background:#e3efff;color:#3a8ee0}
-nav.tabs button:nth-child(5).on{background:#ece6ff;color:#7d5fe0}
+nav.tabs button:nth-child(5).on{background:#e3efff;color:#3a8ee0}
+nav.tabs button:nth-child(6).on{background:#ece6ff;color:#7d5fe0}
+nav.tabs button:nth-child(4).on{background:#fff0e0;color:#e07a20}
 .fab{position:fixed;right:max(18px,calc(50% - 300px));bottom:92px;z-index:21;width:60px;height:60px;border-radius:50%;border:none;font-size:30px;cursor:pointer;display:none;
   background:radial-gradient(circle at 35% 30%,#fff,#ffc1d6 40%,#ff8fb1);color:#fff;box-shadow:0 5px 0 #e8628a,0 10px 22px rgba(232,98,138,.4);font-family:var(--cute)}
 .fab.on{display:block}
@@ -343,6 +363,7 @@ nav.tabs button:nth-child(5).on{background:#ece6ff;color:#7d5fe0}
   <section class="view" id="v-add"></section>
   <section class="view" id="v-over"></section>
   <section class="view" id="v-ana"></section>
+  <section class="view" id="v-asset"></section>
   <section class="view" id="v-set"></section>
 </div>
 
@@ -352,6 +373,7 @@ nav.tabs button:nth-child(5).on{background:#ece6ff;color:#7d5fe0}
   <button data-v="add" onclick="go('add')"><span class="e">✍️</span>기록</button>
   <button data-v="over" onclick="go('over')"><span class="e">📒</span>한눈에</button>
   <button data-v="ana" onclick="go('ana')"><span class="e">🔍</span>분석</button>
+  <button data-v="asset" onclick="go('asset')"><span class="e">💎</span>재산</button>
   <button data-v="set" onclick="go('set')"><span class="e">⚙️</span>설정</button>
 </div></nav>
 <div id="toast"></div>
@@ -460,7 +482,7 @@ const Local = {
       case 'deleteTx': d.tx = d.tx.filter(t=>t.id!==p.id); this.save(d); return true;
       case 'addFixed': d.fixed.push(p.item); this.save(d); return p.item;
       case 'deleteFixed': d.fixed = d.fixed.filter(t=>t.id!==p.id); this.save(d); return true;
-      case 'saveSettings': d.settings = p.settings; this.save(d); return true;
+      case 'saveSettings': d.settings = Object.assign(d.settings||{}, p.settings); this.save(d); return true;
       case 'changePw': LS.set('gb_pwhash', await sha(p.newPw)); return true;
     }
     throw new Error('알 수 없는 요청');
@@ -469,7 +491,7 @@ const Local = {
 
 /* ===== 상태 ===== */
 const state = { tx:[], fixed:[], settings:{...DEFAULT_SETTINGS}, view:'home', month:curMonth(),
-  form:{type:'변동지출', cat:'식비', who:'공동'} };
+  form:{type:'변동지출', cat:'식비', who:'공동', card:LS.get('gb_card',false)} };
 
 async function loadAll(){
   const d = await Api.call('getAll');
@@ -477,6 +499,8 @@ async function loadAll(){
   state.fixed = (d.fixed||[]).map(f=>({...f, amount:+f.amount||0}));
   state.settings = Object.assign({...DEFAULT_SETTINGS}, d.settings||{});
   state.settings.goal = +state.settings.goal || DEFAULT_SETTINGS.goal;
+  state.assets = parseJ(state.settings.assets, []); state.assetHist = parseJ(state.settings.assetHist, {});
+  delete state.settings.assets; delete state.settings.assetHist;
 }
 
 /* ===== 계산 ===== */
@@ -565,7 +589,7 @@ function moveMonth(k){ state.month = addMonth(state.month,k); state.fixOpen=fals
 function txRow(t){
   const sgn = t.type==='수입' ? '+' : (t.type==='저축' ? '→' : '−');
   return `<div class="tx"><div class="dot d-${t.type}">${ICON[t.cat]||'🧾'}</div>
-    <div class="mid"><b>${esc(t.cat)}${t.memo?` · <span style="display:inline;font-weight:400">${esc(t.memo)}</span>`:''}</b>
+    <div class="mid"><b>${esc(t.cat)}${isCard(t)?' <span class="ctag">💳</span>':''}${memoOf(t)?` · <span style="display:inline;font-weight:400">${esc(memoOf(t))}</span>`:''}</b>
     <span>${t.date.slice(5).replace('-','/')} · ${esc(t.type)} · ${esc(t.who||'공동')}</span></div>
     <div class="amt t-${t.type}">${sgn}${won(t.amount)}</div>
     <button class="del" onclick="delTx('${t.id}')" title="삭제">✕</button></div>`;
@@ -625,6 +649,8 @@ function renderHome(){
   if(cs.length) html += `<div class="card"><h3>💬 곳간지기의 한마디</h3>${cs.map(c=>`<div class="coach ${c.t}"><div class="ic">${c.ic}</div><div><b>${c.h}</b>${c.p}</div></div>`).join('')}</div>`;
 
   const recent = [...s.list].sort((a,b)=>b.date.localeCompare(a.date)||String(b.createdAt||'').localeCompare(String(a.createdAt||''))).slice(0,5);
+  if(assets().length){ const at = assetSum(assets()), pv = assetPrev();
+    html += `<div class="card" onclick="go('asset')" style="cursor:pointer"><h3>💎 우리 재산 <small>저축 목표와 별개 · 자세히 ›</small></h3><div class="row"><span>순자산</span><b style="font-size:20px">${won(at.net)}</b></div>${pv?`<div class="muted" style="text-align:right">지난 기록 대비 <b class="${at.net-pv.v>=0?'good':'bad'}">${sign(at.net-pv.v)}</b></div>`:''}</div>`; }
   if(recent.length) html += `<div class="card"><h3>🕊️ 최근 기록 <small><a href="#" onclick="state.month=curMonth();go('over');return false" style="color:inherit">전체보기 ›</a></small></h3>${recent.map(txRow).join('')}</div>`;
   $('#v-home').innerHTML = html;
 }
@@ -664,6 +690,8 @@ function renderAdd(){
     <div class="quick">${[10000,50000,100000,1000000].map(v=>`<div class="chip" onclick="bump(${v})">+${man(v)}</div>`).join('')}<div class="chip" onclick="bump(0)">지우기</div></div>
     <div class="grid2"><div><label class="f">날짜</label><input class="in" type="date" id="fDate" value="${f.date||today()}" onchange="state.form.date=this.value"></div>
       <div><label class="f">누가</label><select class="in" id="fWho" onchange="state.form.who=this.value">${whoOpts.map(w=>`<option ${f.who===w?'selected':''}>${esc(w)}</option>`).join('')}</select></div></div>
+    ${(f.type==='변동지출'||f.type==='고정지출')?`<label class="f">결제수단</label>
+    <div class="seg pay"><div class="chip ${f.card?'':'on'}" onclick="setForm('card',false)">💵 현금·체크</div><div class="chip ${f.card?'on':''}" onclick="setForm('card',true)">💳 신용카드</div></div>`:''}
     <label class="f">메모</label>
     <input class="in" id="fMemo" enterkeyhint="done" placeholder="예) 마트 장보기, 엄마 생신 선물" value="${esc(f.memo||'')}" oninput="state.form.memo=this.value" ${enter}>
     ${f.type==='변동지출'?budgetHint():''}
@@ -689,7 +717,7 @@ function cartCard(){
 function fixedCard(s){
   if(!state.fixed.length) return '';
   const m = state.month;
-  const done = fx => s.list.some(t=>t.type==='고정지출' && t.memo===fx.name);
+  const done = fx => s.list.some(t=>t.type==='고정지출' && memoOf(t)===fx.name);
   const left = state.fixed.filter(fx=>!done(fx));
   if(!state.fixOpen) return `<div class="card"><h3>📌 고정지출 한 번에 등록 <small>${mLabel(m)}</small></h3>
     <div class="muted">설정에 등록한 고정지출 ${state.fixed.length}건 중 <b>${left.length}건</b>이 아직 등록 전이에요</div>
@@ -704,12 +732,12 @@ function fixedCard(s){
 }
 function openFix(){
   const s = stats(state.month); state.fixDraft = {};
-  state.fixed.forEach(fx=>{ state.fixDraft[fx.id] = {on: !s.list.some(t=>t.type==='고정지출' && t.memo===fx.name), amount:+fx.amount}; });
+  state.fixed.forEach(fx=>{ state.fixDraft[fx.id] = {on: !s.list.some(t=>t.type==='고정지출' && memoOf(t)===fx.name), amount:+fx.amount}; });
   state.fixOpen = true; renderAdd(); updateFixBtn();
 }
 function fixTodo(){
   const s = stats(state.month);
-  return state.fixed.filter(fx=>{ const r = state.fixDraft[fx.id]; return r && r.on && r.amount>0 && !s.list.some(t=>t.type==='고정지출' && t.memo===fx.name); });
+  return state.fixed.filter(fx=>{ const r = state.fixDraft[fx.id]; return r && r.on && r.amount>0 && !s.list.some(t=>t.type==='고정지출' && memoOf(t)===fx.name); });
 }
 function fixSet(id,k,v){ if(state.fixDraft[id]) state.fixDraft[id][k] = v; updateFixBtn(); }
 function updateFixBtn(){ const b=$('#fixBtn'); if(!b) return; const t=fixTodo(); b.textContent = t.length ? `선택한 ${t.length}건 등록 (${won(sum(t.map(fx=>state.fixDraft[fx.id].amount)))})` : '등록할 항목을 골라주세요'; }
@@ -718,7 +746,7 @@ function budgetHint(){
   if(b.regular===0) return '';
   return `<div class="banner" style="margin-top:12px">💡 이번 달 남은 생활비 <b>${won(b.remain)}</b> · 오늘 하루 <b>${won(Math.max(0,b.perDay))}</b>까지 괜찮아요</div>`;
 }
-function setForm(k,v){ readForm(); state.form[k]=v; if(k==='type') state.form.cat = CATS[v][0]; renderAdd(); }
+function setForm(k,v){ readForm(); state.form[k]=v; if(k==='card') LS.set('gb_card',v); if(k==='type') state.form.cat = CATS[v][0]; renderAdd(); }
 function readForm(){ const a=$('#fAmt'); if(a){ state.form.amount = +a.value.replace(/[^\d]/g,'')||0; state.form.date=$('#fDate').value; state.form.who=$('#fWho').value; state.form.memo=$('#fMemo').value; } }
 function fmtAmt(el){ const n = el.value.replace(/[^\d]/g,''); el.value = n ? Number(n).toLocaleString('ko-KR') : ''; state.form.amount = +n||0; }
 function bump(v){ const el=$('#fAmt'); const n = v===0 ? 0 : (+el.value.replace(/[^\d]/g,'')||0) + v; el.value = n? n.toLocaleString('ko-KR') : ''; state.form.amount=n; }
@@ -726,7 +754,8 @@ function quickAdd(type,cat){ state.form = {...state.form, type, cat, amount:0, m
 function makeItem(){
   readForm(); const f = state.form;
   if(!f.amount){ toast('금액을 입력해주세요'); const a=$('#fAmt'); if(a) a.focus(); return null; }
-  return {id:uid(), date:f.date||today(), type:f.type, cat:f.cat, amount:f.amount, memo:(f.memo||'').trim(), who:f.who||'공동', createdAt:new Date().toISOString()};
+  const card = f.card && (f.type==='변동지출'||f.type==='고정지출');
+  return {id:uid(), date:f.date||today(), type:f.type, cat:f.cat, amount:f.amount, memo:((card?CARD_TAG+' ':'')+(f.memo||'').trim()).trim(), who:f.who||'공동', createdAt:new Date().toISOString()};
 }
 function addToCart(){
   const it = makeItem(); if(!it) return;
@@ -786,6 +815,7 @@ function renderOver(){
     <div class="legend" style="display:flex;flex-wrap:wrap;gap:4px 14px">${seg.map(([n,v,c])=>`<div><i style="background:${c}"></i>${n} <b style="margin-left:4px">${man(v)}</b></div>`).join('')}</div>
     <div class="row" style="margin-top:8px;border-top:1px dashed var(--line)"><span>통장에 남은 돈</span><b class="${s.left<0?'bad':'good'}">${won(s.left)}</b></div>
   </div>
+  ${cardCard(m)}
   <div class="card"><h3>🍩 어디에 썼을까 <small>지출 ${won(s.spend)}</small></h3>
     ${cats.length?`<div class="donutwrap"><div class="donut" style="background:conic-gradient(${stops.join(',')})"></div>
       <div class="legend">${cats.slice(0,8).map(([c,v],i)=>`<div><i style="background:${PALETTE[i%PALETTE.length]}"></i>${ICON[c]||''} ${c}<span>${man(v)}</span></div>`).join('')}</div></div>`:'<div class="empty">지출 기록이 없어요</div>'}
@@ -882,10 +912,10 @@ function renderSet(){
 }
 async function saveSettings(){
   const Y = curMonth().slice(0,4);
-  const s = Object.assign({}, state.settings, {goal: +$('#sGoal').value.replace(/[^\d]/g,'')||20000000, nameA: $('#sA').value.trim()||'남편', nameB: $('#sB').value.trim()||'아내'});
+  const s = {goal: +$('#sGoal').value.replace(/[^\d]/g,'')||20000000, nameA: $('#sA').value.trim()||'남편', nameB: $('#sB').value.trim()||'아내'};
   s['goal_'+Y] = +$('#sGoalY').value.replace(/[^\d]/g,'') || '';
   busy(true,'저장 중…');
-  try{ await Api.call('saveSettings',{settings:s}); state.settings = s; toast('목표를 저장했어요 🎯'); render(); }
+  try{ await Api.call('saveSettings',{settings:s}); state.settings = Object.assign({}, state.settings, s); toast('목표를 저장했어요 🎯'); render(); }
   catch(e){ toast(e.message); } finally{ busy(false); }
 }
 state.fixRows = [];
@@ -947,6 +977,122 @@ async function seedDemo(){
 }
 function resetLocal(){ if(!confirm('이 기기의 모든 기록을 지울까요? (비밀번호는 유지)')) return; LS.del('gb_db'); state.tx=[]; state.fixed=[]; state.settings={...DEFAULT_SETTINGS}; toast('초기화했어요'); go('home'); }
 
+/* ===== 💎 재산 (구글시트 '설정' 탭에 assets / assetHist 로 저장 — 재배포 불필요) ===== */
+const AKINDS = {
+  '입출금·현금':{ic:'👛',c:'#ffc93c'}, '적금·예금':{ic:'🐷',c:'#ff8fb1'}, '주식·투자':{ic:'📈',c:'#6cb8ff'},
+  '청약':{ic:'🏡',c:'#3fcfaa'}, '비상금':{ic:'🧯',c:'#ffa96b'}, '연금':{ic:'🌱',c:'#a3e36b'},
+  '보증금·부동산':{ic:'🏠',c:'#b49cff'}, '기타자산':{ic:'💎',c:'#f78fd8'}, '대출(빚)':{ic:'🏦',c:'#9aa8ff'}
+};
+const isDebt = a => a.kind==='대출(빚)';
+const parseJ = (v,d) => { if(v && typeof v==='object') return v; try{ return v ? JSON.parse(v) : d; }catch(e){ return d; } };
+state.assetRows = [];
+function newAssetRow(){ state.assetRows.push({name:'', kind:'주식·투자', amount:0, owner:'공동'}); }
+newAssetRow(); newAssetRow();
+function assets(){ return state.assets || []; }
+function assetSum(list){
+  const plus = sum(list.filter(a=>!isDebt(a)).map(a=>a.amount)), debt = sum(list.filter(isDebt).map(a=>a.amount));
+  return {plus, debt, net:plus-debt};
+}
+function assetPrev(){
+  const h = state.assetHist || {}, cm = curMonth();
+  const ks = Object.keys(h).filter(k=>k<cm).sort();
+  return ks.length ? {m:ks[ks.length-1], v:h[ks[ks.length-1]]} : null;
+}
+function daysAgo(iso){ if(!iso) return ''; const d = Math.floor((Date.now()-new Date(iso))/86400000); return d<=0?'오늘':d===1?'어제':`${d}일 전`; }
+function persistAssets(okMsg){
+  const list = assets(), t = assetSum(list);
+  state.assetHist = Object.assign({}, state.assetHist||{}, {[curMonth()]: t.net});
+  const settings = {assets: JSON.stringify(list), assetHist: JSON.stringify(state.assetHist)};
+  Sync.run('saveSettings', {settings}, null, okMsg);
+}
+function renderAsset(){
+  const list = assets(), t = assetSum(list), prev = assetPrev(), st = state.settings;
+  const pl = plan(curMonth()); pl.y = curMonth().slice(0,4);
+  const groups = {}; list.forEach(a=>{ (groups[a.kind] = groups[a.kind] || []).push(a); });
+  const kinds = Object.keys(AKINDS).filter(k=>groups[k]);
+  const plusKinds = kinds.filter(k=>k!=='대출(빚)');
+  const h = state.assetHist || {};
+  const months = Array.from({length:6},(_,i)=>addMonth(curMonth(),i-5));
+  const hv = months.map(m=>h[m]); const hmax = Math.max(1, ...hv.filter(v=>v!=null).map(Math.abs));
+  const old = list.length && list.every(a=>a.updated && (Date.now()-new Date(a.updated))>25*86400000);
+  $('#v-asset').innerHTML = `
+  <div class="goalnote" onclick="go('home')">
+    <div class="gn-h">🎯 ${pl.y}년 저축 목표 <b>${won(pl.savedThrough)}</b> / ${won(pl.goal)}</div>
+    <div class="bar" style="margin:6px 0 4px"><i style="width:${Math.min(100,pl.savedThrough/pl.goal*100)}%"></i></div>
+    <div class="gn-p">목표는 <b>기록 탭에서 '저축'으로 기록한 돈</b>만 세요. 아래 순자산은 주식이 오르내리는 것까지 포함한 '지금 가진 돈 전체'라서 목표와는 따로 봐요.</div>
+  </div>
+  <div class="card shimmer"><h3>💎 우리 재산 <small>${list.length}개 계좌</small></h3>
+    <div class="muted">순자산 (모은 돈 − 빚)</div>
+    <div class="big" style="font-size:32px">${won(t.net)}</div>
+    ${prev?`<div class="muted" style="margin-top:2px">지난 기록(${+prev.m.slice(5)}월) 대비 <b class="${t.net-prev.v>=0?'good':'bad'}">${sign(t.net-prev.v)}</b></div>`:''}
+    <div class="grid2" style="margin-top:12px">
+      <div class="mini"><div class="l">💰 자산 합계</div><div class="v">${won(t.plus)}</div></div>
+      <div class="mini"><div class="l">🏦 대출(빚)</div><div class="v">${won(t.debt)}</div></div>
+    </div>
+    ${t.plus?`<div class="stack" style="margin-top:12px">${plusKinds.map(k=>`<div style="width:${sum(groups[k].map(a=>a.amount))/t.plus*100}%;background:${AKINDS[k].c}"></div>`).join('')}</div>
+    <div class="legend" style="display:flex;flex-wrap:wrap;gap:4px 14px">${plusKinds.map(k=>`<div><i style="background:${AKINDS[k].c}"></i>${k} <b style="margin-left:4px">${man(sum(groups[k].map(a=>a.amount)))}</b></div>`).join('')}</div>`:''}
+  </div>
+  ${old?`<div class="banner">🗓️ 잔액을 업데이트한 지 한 달이 넘었어요. 아래에서 금액만 고치고 <b>한 번에 업데이트</b>를 눌러주세요!</div>`:''}
+  <div class="card"><h3>✏️ 잔액 업데이트 <small>금액만 고치고 한 번에 저장</small></h3>
+    ${list.length ? kinds.map(k=>`<div class="agroup">${AKINDS[k].ic} ${k}</div>${groups[k].map(a=>`<div class="arow">
+        <div class="nm"><b>${esc(a.name)}</b><small>${esc(a.owner||'공동')} · ${daysAgo(a.updated)} 업데이트</small></div>
+        <input class="in fixamt" inputmode="numeric" data-aid="${a.id}" value="${Number(a.amount).toLocaleString('ko-KR')}" oninput="fmtNum(this)">
+        <button class="del" onclick="delAsset('${a.id}')" title="삭제">✕</button></div>`).join('')}`).join('')
+      +`<button class="btn full" style="margin-top:14px" onclick="updateAssets()">✨ 잔액 한 번에 업데이트</button>
+        <div class="muted" style="margin-top:8px;text-align:center">한 달에 한 번, 월급날에 업데이트하면 재산 흐름이 그려져요</div>`
+      : '<div class="empty">주식, 청약통장, 적금, 비상금처럼<br>지금 가지고 있는 돈을 아래에서 등록해보세요 💛</div>'}
+  </div>
+  <div class="card"><h3>➕ 재산 추가 <small>여러 개 한 번에</small></h3>
+    ${state.assetRows.map((r,i)=>`<div class="frow">
+      <input class="in" placeholder="이름 (예: 토스 주식, 주택청약)" value="${esc(r.name)}" oninput="state.assetRows[${i}].name=this.value">
+      <button class="del" onclick="state.assetRows.splice(${i},1);if(!state.assetRows.length)newAssetRow();renderAsset()" title="줄 삭제">✕</button>
+      <select class="in" onchange="state.assetRows[${i}].kind=this.value">${Object.keys(AKINDS).map(k=>`<option ${r.kind===k?'selected':''}>${k}</option>`).join('')}</select>
+      <input class="in" inputmode="numeric" placeholder="지금 잔액" value="${r.amount?Number(r.amount).toLocaleString('ko-KR'):''}" oninput="fmtNum(this);state.assetRows[${i}].amount=+this.value.replace(/[^\\d]/g,'')||0">
+      <div class="dayin"><select class="in" onchange="state.assetRows[${i}].owner=this.value">${[st.nameA,st.nameB,'공동'].map(w=>`<option ${r.owner===w?'selected':''}>${esc(w)}</option>`).join('')}</select></div>
+    </div>`).join('')}
+    <div style="display:flex;gap:8px;margin-top:10px"><button class="btn ghost sm" style="flex:1" onclick="newAssetRow();renderAsset()">＋ 줄 추가</button>
+      <button class="btn sm" style="flex:1.6" onclick="addAssets()">✨ 모두 추가하기</button></div>
+    <div class="muted" style="margin-top:8px;line-height:1.5">💡 주식은 평가금액(지금 팔면 받을 돈)으로 적어요. 대출은 '대출(빚)'로 넣으면 순자산에서 빠져요.</div>
+  </div>
+  ${Object.keys(h).length?`<div class="card"><h3>📈 순자산 흐름 <small>최근 6개월</small></h3>
+    <div class="trend">${months.map((m,i)=>`<div class="col"><div class="pair"><div title="${hv[i]!=null?won(hv[i]):'기록 없음'}" style="width:55%;height:${hv[i]!=null?Math.max(3,Math.abs(hv[i])/hmax*100):0}%;background:linear-gradient(#b9dbff,#6cb8ff)"></div></div><small>${+m.slice(5)}월</small></div>`).join('')}</div>
+    <div class="muted" style="margin-top:6px">잔액을 업데이트한 달의 순자산이 기록돼요</div></div>`:''}`;
+}
+function addAssets(){
+  const rows = state.assetRows.filter(r=>r.name.trim());
+  if(!rows.length){ toast('이름을 입력해주세요'); return; }
+  const now = new Date().toISOString();
+  const items = rows.map(r=>({id:uid(), name:r.name.trim(), kind:r.kind, amount:+r.amount||0, owner:r.owner||'공동', updated:now}));
+  state.assets = assets().concat(items); state.assetRows=[]; newAssetRow(); newAssetRow(); renderAsset();
+  persistAssets(`💎 ${items.length}개 추가했어요`);
+}
+function updateAssets(){
+  const now = new Date().toISOString(); let n = 0;
+  document.querySelectorAll('[data-aid]').forEach(el=>{
+    const a = assets().find(x=>x.id===el.dataset.aid); const v = +el.value.replace(/[^\d]/g,'')||0;
+    if(a){ if(a.amount!==v) n++; a.amount = v; a.updated = now; }
+  });
+  renderAsset(); persistAssets(n ? `✨ ${n}개 잔액을 업데이트했어요` : '✨ 이번 달 잔액을 확인했어요');
+}
+function delAsset(id){
+  const a = assets().find(x=>x.id===id); if(!a || !confirm(`'${a.name}'을(를) 삭제할까요?`)) return;
+  state.assets = assets().filter(x=>x.id!==id); renderAsset(); persistAssets('삭제했어요');
+}
+
+/* ===== 💳 신용카드 표시 (메모 앞에 [카드] 로 저장 — 재배포 불필요) ===== */
+const CARD_TAG = '[카드]';
+const isCard = t => String(t.memo||'').startsWith(CARD_TAG);
+const memoOf = t => String(t.memo||'').replace(CARD_TAG,'').trim();
+function cardSum(m){ return sum(state.tx.filter(t=>t.date.slice(0,7)===m && isCard(t) && (t.type==='변동지출'||t.type==='고정지출')).map(t=>t.amount)); }
+function cardCard(m){
+  const now = cardSum(m), prev = cardSum(addMonth(m,-1));
+  if(!now && !prev) return '';
+  return `<div class="card"><h3>💳 신용카드 <small>사용한 달 기준으로 기록돼요</small></h3>
+    <div class="row"><span>${+m.slice(5)}월에 카드로 쓴 돈 → <b>${+addMonth(m,1).slice(5)}월 청구 예정</b></span><b>${won(now)}</b></div>
+    <div class="row"><span>${+addMonth(m,-1).slice(5)}월에 쓴 돈 → <b>이번 달 청구</b></span><b>${won(prev)}</b></div>
+    <div class="muted" style="margin-top:8px;line-height:1.55">카드값이 통장에서 빠져나갈 때는 따로 기록하지 않아요. 이미 쓴 날 기록했으니까 두 번 세면 안 돼요! 청구일 전에 통장에 이 금액이 있는지만 확인해요 💛</div></div>`;
+}
+
 /* ===== 화면 전환 ===== */
 function go(v){
   state.view = v;
@@ -959,7 +1105,7 @@ function render(){
   const d = new Date(), wk = '일월화수목금토'[d.getDay()];
   $('#todayTxt').textContent = `${d.getFullYear()}.${pad(d.getMonth()+1)}.${pad(d.getDate())} (${wk}) · 오늘도 반짝이는 하루 ✦`;
   $('#modeBanner').innerHTML = Api.remote() ? '' : `<div class="banner">💾 지금은 <b>이 기기에만</b> 저장돼요. <a href="#" onclick="go('set');return false" style="color:inherit;font-weight:700">설정 → 구글시트 연결</a>로 둘이 함께 써요.</div>`;
-  ({home:renderHome, add:renderAdd, over:renderOver, ana:renderAna, set:renderSet})[state.view]();
+  ({home:renderHome, add:renderAdd, over:renderOver, ana:renderAna, asset:renderAsset, set:renderSet})[state.view]();
 }
 
 /* ===== 잠금 화면 ===== */
@@ -1006,7 +1152,7 @@ function openApp(){
 }
 function lockApp(){
   if(Sync.n>0){ toast('☁️ 저장이 끝나면 잠글게요'); const w=setInterval(()=>{ if(Sync.n===0){ clearInterval(w); lockApp(); } },400); return; }
-  session.pw=''; state.tx=[]; state.fixed=[];
+  session.pw=''; state.tx=[]; state.fixed=[]; state.assets=[]; state.assetHist={};
   $('#app').classList.remove('on'); $('#tabs').classList.remove('on'); $('#fab').classList.remove('on');
   $('#lock').classList.remove('off'); FX.setMode('lock'); initLock();
 }
